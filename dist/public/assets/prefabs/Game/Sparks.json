@@ -1,0 +1,28 @@
+{
+	"children": [],
+	"components": {
+		"AnimationRenderable": {
+			"currentAnimationIndexCount": "0",
+			"currentAnimationName": "",
+			"enabled": "true",
+			"flipX": "false",
+			"flipY": "false",
+			"frame": "(0, 0)",
+			"isAnimating": "false",
+			"lastAnimationTime": "0",
+			"loop": "false"
+		},
+		"SpriteRenderable": {
+			"alpha": "1",
+			"enabled": "true"
+		},
+		"Visible": {
+			"enabled": "true"
+		}
+	},
+	"dir": "Game",
+	"name": "Sparks",
+	"parent": "",
+	"tag": "Sparks",
+	"topParent": ""
+}

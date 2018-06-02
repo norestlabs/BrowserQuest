@@ -1,0 +1,28 @@
+{
+    "name": "GameScene",
+    "id": 1,
+
+    "world": {
+        "children": [
+            {
+                "children": [],
+                "components": {},
+                "name": "Game",
+                "path": "/World",
+                "ref": "/Game/Game",
+                "tag": "Game"
+            }
+        ],
+        "components": {
+            "Transform": {
+                "enabled": "true",
+                "gridPosition": "(0, 0)",
+                "orientation": "2",
+                "position": "(0, 0)"
+            }
+        },
+        "dir": "",
+        "name": "World",
+        "tag": "World"
+    }
+}

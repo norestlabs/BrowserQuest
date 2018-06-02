@@ -1,0 +1,29 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "noImplicitReturns": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": false,
+        "strictFunctionTypes": false,
+        "forceConsistentCasingInFileNames": false,
+        "outDir": "../dist",
+        "rootDir": ".",
+        "typeRoots": [
+            "./../node_modules/@types", "./@types"
+        ],
+        "baseUrl": ".",
+        "paths": {
+            "@components/*": ["engine/scripts/components/*"],
+            "@utils/*": ["engine/scripts/utils/*"],
+            "@lib/*": ["engine/scripts/lib/*"],
+            "@systems/*": ["engine/scripts/systems/*"],
+            "@common/*": ["shared/scripts/*"],
+            "@configuration/*": ["../configuration/*"],
+            "@resources/*": ["../resources/*"],
+            "@engine/*": ["engine/scripts/*"],
+            "*": ["../node_modules/*"]
+        }
+    }
+}

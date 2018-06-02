@@ -1,0 +1,38 @@
+{
+	"children": [
+		{
+			"children": [],
+			"components": {},
+			"name": "SelectedPosition",
+			"path": "/Mouse",
+			"ref": "/Game/SelectedPosition",
+			"tag": "SelectedPosition"
+		},
+		{
+			"children": [],
+			"components": {},
+			"name": "TargetCell",
+			"path": "/Mouse",
+			"ref": "/Game/TargetCell",
+			"tag": ""
+		}
+	],
+	"components": {
+		"MouseHover": {
+			"enabled": "true",
+			"hoveringCollidingTile": "false",
+			"hoveringPlateauTile": "false"
+		},
+		"MouseInput": {
+			"enabled": "true",
+			"mouseGridPosition": "(0, 0)",
+			"mousePosition": "(0, 0)",
+			"previousClickPosition": "(-1, -1)"
+		}
+	},
+	"dir": "Game",
+	"name": "Mouse",
+	"parent": "",
+	"tag": "Mouse",
+	"topParent": ""
+}

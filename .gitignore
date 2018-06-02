@@ -3,6 +3,12 @@ client-build
 build.txt
 config_build.json
 config_local*
-client/audio/music
 .DS_Store
 *.swp
+dist/engine
+dist/client
+dist/mapEditor
+dist/prefabEditor
+dist/server
+dist/shared
+dist/public/scripts

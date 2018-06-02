@@ -1,0 +1,18 @@
+{
+	"children": [],
+	"components": {
+		"PrimitiveRenderable": {
+			"color": "",
+			"enabled": "true",
+			"format": "0"
+		},
+		"Visible": {
+			"enabled": "false"
+		}
+	},
+	"dir": "Game",
+	"name": "SelectedPosition",
+	"parent": "",
+	"tag": "SelectedPosition",
+	"topParent": ""
+}

@@ -1,0 +1,120 @@
+{
+	"children": [
+		{
+			"children": [],
+			"components": {},
+			"name": "Player",
+			"path": "/Game",
+			"ref": "/Game/Player",
+			"tag": "Player"
+		},
+		{
+			"children": [],
+			"components": {},
+			"name": "Mouse",
+			"path": "/Game",
+			"ref": "/Game/Mouse",
+			"tag": "Mouse"
+		},
+		{
+			"children": [],
+			"components": {},
+			"name": "Main Camera",
+			"path": "/Game",
+			"ref": "/Game/Main Camera",
+			"tag": "MainCamera"
+		},
+		{
+			"children": [],
+			"components": {},
+			"name": "Sparks",
+			"path": "/Game",
+			"ref": "/Game/Sparks",
+			"tag": "Sparks"
+		},
+		{
+			"children": [],
+			"components": {},
+			"name": "AnimatedTiles",
+			"path": "/Game",
+			"ref": "",
+			"tag": "AnimatedTiles"
+		},
+		{
+			"children": [],
+			"components": {},
+			"name": "Infos",
+			"path": "/Game",
+			"ref": "",
+			"tag": "Infos"
+		},
+		{
+			"children": [],
+			"components": {
+				"Loadable": {
+					"enabled": "false",
+					"isLoaded": "false"
+				}
+			},
+			"name": "SpriteRenderer",
+			"path": "/Game",
+			"ref": "",
+			"tag": "SpriteRenderer"
+		},
+		{
+			"children": [],
+			"components": {
+				"Loadable": {
+					"enabled": "false",
+					"isLoaded": "false"
+				},
+				"TiledMap": {
+					"enabled": "true",
+					"height": "0",
+					"tilesize": "16",
+					"width": "0"
+				}
+			},
+			"name": "Map",
+			"path": "/Game",
+			"ref": "",
+			"tag": "Map"
+		}
+	],
+	"components": {
+		"Client": {
+			"enabled": "true",
+			"host": "",
+			"isListening": "true",
+			"isTimeout": "false",
+			"port": "27000"
+		},
+		"DebugSettings": {
+			"debugPathing": "false",
+			"enabled": "true",
+			"entityGrid": "true"
+		},
+		"EntityGrids": {
+			"enabled": "true"
+		},
+		"FlickeringFix": {
+			"currentTime": "0",
+			"duration": "100",
+			"enabled": "true"
+		},
+		"Loader": {
+			"enabled": "false"
+		},
+		"Zoning": {
+			"elapsedTime": "0",
+			"enabled": "false",
+			"orientation": "1",
+			"speed": "500"
+		}
+	},
+	"dir": "Game",
+	"name": "Game",
+	"parent": "",
+	"tag": "Game",
+	"topParent": ""
+}

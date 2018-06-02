@@ -1,0 +1,20 @@
+{
+	"children": [],
+	"components": {
+		"SpriteRenderable": {
+			"alpha": "1",
+			"enabled": "true"
+		},
+		"Transform": {
+			"enabled": "true",
+			"gridPosition": "(0, 0)",
+			"orientation": "2",
+			"position": "(0, 0)"
+		}
+	},
+	"dir": "",
+	"name": "Weapon",
+	"parent": "",
+	"tag": "",
+	"topParent": ""
+}

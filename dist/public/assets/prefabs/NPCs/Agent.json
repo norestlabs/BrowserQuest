@@ -1,0 +1,70 @@
+{
+	"children": [],
+	"components": {
+		"AnimationRenderable": {
+			"currentAnimationIndexCount": "0",
+			"currentAnimationName": "",
+			"enabled": "true",
+			"flipX": "false",
+			"flipY": "false",
+			"frame": "(0, 0)",
+			"isAnimating": "false",
+			"lastAnimationTime": "0",
+			"loop": "false"
+		},
+		"Clickable": {
+			"enabled": "true"
+		},
+		"Collidable": {
+			"enabled": "true"
+		},
+		"Dirty": {
+			"enabled": "true"
+		},
+		"Fadable": {
+			"currentTime": "0",
+			"duration": "1000",
+			"enabled": "false",
+			"fadeIn": "true"
+		},
+		"Identifiable": {
+			"enabled": "true",
+			"id": "-1",
+			"kind": "47",
+			"name": "agent"
+		},
+		"ShadowSpriteRenderable": {
+			"enabled": "true",
+			"offset": "0"
+		},
+		"SilhouetteSpriteRenderable": {
+			"alpha": "1",
+			"enabled": "false"
+		},
+		"SpriteRenderable": {
+			"alpha": "1",
+			"enabled": "true"
+		},
+		"Talk": {
+			"count": "0",
+			"enabled": "true",
+			"index": "0"
+		},
+		"Talkable": {
+			"enabled": "false",
+			"message": "",
+			"time": "0"
+		},
+		"Transform": {
+			"enabled": "true",
+			"gridPosition": "(0, 0)",
+			"orientation": "2",
+			"position": "(0, 0)"
+		}
+	},
+	"dir": "NPCs",
+	"name": "Agent",
+	"parent": "",
+	"tag": "",
+	"topParent": ""
+}

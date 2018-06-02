@@ -1,0 +1,97 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Client Watcher",
+            "type": "shell",
+            "args": [
+                "--watch", "-p", "./src/tsconfig.client.json", "--noEmit"
+            ],
+            "command": "tsc",
+            "presentation": {
+                "reveal": "silent",
+                "echo": true,
+                "focus": false,
+                "panel": "shared"
+            },
+            "isBackground": true,
+            "problemMatcher": [
+                "$tsc-watch"
+            ],
+            "group": "build"
+        },
+        {
+            "label": "Server Watcher",
+            "type": "shell",
+            "args": [
+                "--watch", "-p", "./src/tsconfig.server.json", "--noEmit"
+            ],
+            "command": "tsc",
+            "presentation": {
+                "reveal": "silent",
+                "echo": true,
+                "focus": false,
+                "panel": "shared"
+            },
+            "isBackground": true,
+            "problemMatcher": [
+                "$tsc-watch"
+            ],
+            "group": "build"
+        }
+    ]
+}
+
+/*{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Client Watcher",
+            "type": "typescript",
+            "option": "watch",
+            "tsconfig": "./src/tsconfig.client.json",
+            "presentation": {
+                "reveal": "silent",
+                "echo": true,
+                "focus": false,
+                "panel": "shared"
+            },
+            "isBackground": true,
+            "problemMatcher": [
+                "$tsc-watch"
+            ],
+            "group": "build"
+        },
+        {
+            "label": "Server Watcher",
+            "type": "typescript",
+            "option": "watch",
+            "tsconfig": "./src/tsconfig.server.json",
+            "presentation": {
+                "reveal": "silent",
+                "echo": true,
+                "focus": false,
+                "panel": "shared"
+            },
+            "isBackground": true,
+            "problemMatcher": [
+                "$tsc-watch"
+            ],
+            "group": "build"
+        }
+    ]
+}*/
+
+/*{
+    "version": "0.1.0",
+    "command": "tsc",
+    "isShellCommand": true,
+    "args": ["-w", "-p", "./src/tsconfig.client.json", "--noEmit"],
+    "showOutput": "silent",
+    "isBackground": true,
+    "problemMatcher": "$tsc-watch"
+ }*/

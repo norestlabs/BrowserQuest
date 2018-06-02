@@ -1,0 +1,21 @@
+{
+	"children": [],
+	"components": {
+		"InfoRenderable": {
+			"currentTime": "0",
+			"enabled": "false",
+			"offset": "(8, -15)"
+		},
+		"Transform": {
+			"enabled": "true",
+			"gridPosition": "(0, 0)",
+			"orientation": "2",
+			"position": "(0, 0)"
+		}
+	},
+	"dir": "Game",
+	"name": "DamageInfo",
+	"parent": "",
+	"tag": "",
+	"topParent": ""
+}

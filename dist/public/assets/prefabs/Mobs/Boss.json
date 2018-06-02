@@ -1,0 +1,105 @@
+{
+	"children": [],
+	"components": {
+		"Aggroable": {
+			"aggroedBy": "-1",
+			"enabled": "true",
+			"range": "3"
+		},
+		"AnimationRenderable": {
+			"currentAnimationIndexCount": "0",
+			"currentAnimationName": "",
+			"enabled": "true",
+			"flipX": "false",
+			"flipY": "false",
+			"frame": "(0, 0)",
+			"isAnimating": "false",
+			"lastAnimationTime": "0",
+			"loop": "false"
+		},
+		"Attack": {
+			"cooldownCurrentTime": "0",
+			"cooldownDuration": "2000",
+			"enabled": "false",
+			"target": "-1",
+			"unconfirmedTarget": "-1"
+		},
+		"Attackable": {
+			"enabled": "true",
+			"hurtTimeout": "0",
+			"isHurting": "false"
+		},
+		"Clickable": {
+			"enabled": "true"
+		},
+		"Collidable": {
+			"enabled": "true"
+		},
+		"Dirty": {
+			"enabled": "true"
+		},
+		"Fadable": {
+			"currentTime": "0",
+			"duration": "1000",
+			"enabled": "false",
+			"fadeIn": "true"
+		},
+		"Follow": {
+			"enabled": "false",
+			"target": "-1"
+		},
+		"Health": {
+			"_isDead": "false",
+			"enabled": "true",
+			"hp": "0",
+			"isDying": "false",
+			"maxhp": "0"
+		},
+		"HurtSpriteRenderable": {
+			"alpha": "1",
+			"enabled": "false"
+		},
+		"Identifiable": {
+			"enabled": "true",
+			"id": "-1",
+			"kind": "13",
+			"name": "boss"
+		},
+		"Movable": {
+			"currentStep": "0",
+			"elapsedTransitionTime": "0",
+			"enabled": "true",
+			"isInTransition": "false",
+			"nextGridPosition": "(-1, -1)",
+			"speed": "300",
+			"wait": "false",
+			"waitTime": "0"
+		},
+		"ShadowSpriteRenderable": {
+			"enabled": "true",
+			"offset": "0"
+		},
+		"SilhouetteSpriteRenderable": {
+			"alpha": "1",
+			"enabled": "false"
+		},
+		"SpriteRenderable": {
+			"alpha": "1",
+			"enabled": "true"
+		},
+		"Transform": {
+			"enabled": "true",
+			"gridPosition": "(0, 0)",
+			"orientation": "2",
+			"position": "(0, 0)"
+		},
+		"Visible": {
+			"enabled": "true"
+		}
+	},
+	"dir": "Mobs",
+	"name": "Boss",
+	"parent": "",
+	"tag": "",
+	"topParent": ""
+}

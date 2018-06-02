@@ -1,0 +1,5 @@
+{
+    "host": "localhost",
+    "port": 27000,
+    "dispatcher": false
+}

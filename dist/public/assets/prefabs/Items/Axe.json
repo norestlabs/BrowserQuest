@@ -1,0 +1,74 @@
+{
+	"children": [],
+	"components": {
+		"AnimationRenderable": {
+			"currentAnimationIndexCount": "0",
+			"currentAnimationName": "",
+			"enabled": "true",
+			"flipX": "false",
+			"flipY": "false",
+			"frame": "(0, 0)",
+			"isAnimating": "false",
+			"lastAnimationTime": "0",
+			"loop": "false"
+		},
+		"Blink": {
+			"enabled": "false",
+			"interval": "-1",
+			"shouldStart": "false",
+			"speed": "150"
+		},
+		"Clickable": {
+			"enabled": "true"
+		},
+		"Dirty": {
+			"enabled": "true"
+		},
+		"Fadable": {
+			"currentTime": "0",
+			"duration": "1000",
+			"enabled": "false",
+			"fadeIn": "true"
+		},
+		"Identifiable": {
+			"enabled": "true",
+			"id": "-1",
+			"kind": "65",
+			"name": "axe"
+		},
+		"Lootable": {
+			"enabled": "true",
+			"message": "You pick up an axe",
+			"wasDropped": "false"
+		},
+		"ShadowSpriteRenderable": {
+			"enabled": "true",
+			"offset": "0"
+		},
+		"SilhouetteSpriteRenderable": {
+			"alpha": "1",
+			"enabled": "false"
+		},
+		"SparksRenderable": {
+			"enabled": "true"
+		},
+		"SpriteRenderable": {
+			"alpha": "1",
+			"enabled": "true"
+		},
+		"Transform": {
+			"enabled": "true",
+			"gridPosition": "(0, 0)",
+			"orientation": "2",
+			"position": "(0, 0)"
+		},
+		"Visible": {
+			"enabled": "true"
+		}
+	},
+	"dir": "Items",
+	"name": "Axe",
+	"parent": "",
+	"tag": "",
+	"topParent": ""
+}

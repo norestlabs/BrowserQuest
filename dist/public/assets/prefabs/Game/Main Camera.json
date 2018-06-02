@@ -1,0 +1,17 @@
+{
+	"children": [],
+	"components": {
+		"CameraView": {
+			"enabled": "true"
+		},
+		"Transform": {
+			"enabled": "true",
+			"gridPosition": "(0, 0)",
+			"orientation": "2",
+			"position": "(0, 0)"
+		}
+	},
+	"dir": "Game",
+	"name": "Main Camera",
+	"tag": "MainCamera"
+}

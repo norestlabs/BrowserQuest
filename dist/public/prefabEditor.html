@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Prefab Manager</title>
+        <link rel="stylesheet" href="vendors/bootstrap/css/bootstrap.min.css">
+        <link rel="stylesheet" href="assets/css/prefabEditor.css">
+    </head>
+
+    <body>
+        <h1 id="current-prefab-name" class="text-centered">Prefab Name</h1>
+        <div class="row equal" style="margin-left: 5%; margin-right: 5%; text-align: center;">
+            <div class="col-md-4 panel panel-default" style="margin-right: 1%;">
+                <div class="row" style="margin-top: 5%; margin-bottom: 5%;">
+                    <div class="col-md-9">
+                        <label for="EntityName" style="float: left; margin-left: 5%;">Name</label>
+                        <input id="entity-name" name="EntityName" style="float: right; margin-right: 5%;"/>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-default btn-block" id="entity-name-save-button">Save</button>
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 5%; margin-bottom: 5%;">
+                    <div class="col-md-9">
+                        <label for="Tag" style="float: left; margin-left: 5%;">Tag</label>
+                        <input id="entity-tag" name="Tag" style="float: right; margin-right: 5%;"/>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-default btn-block" id="entity-tag-save-button">Save</button>
+                    </div>
+                </div>
+                <div class="row" style="margin: 5%;">
+                    <button id="entity-components-button" class="btn btn-default btn-block">Components</button>
+                </div>
+                <div class="row" style="margin: 5%;">
+                    <button id="entity-children-button" class="btn btn-default btn-block">Children</button>
+                </div>
+                <div class="row equal well" style="margin: 1%;">
+                    <div class="col-md-3">
+                        <p class="align-middle">Child Path</p>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="panel panel-default align-middle" style="width: 90%; line-height: 25%;">
+                            <div id="child-path" class="panel-body">None</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <button id="child-back-button" class="btn btn-default btn-block align-middle disabled">Back</button>
+                    </div>
+                </div>
+                <div class="row equal well" style="margin: 1%;">
+                    <div class="col-md-3">
+                        <p class="align-middle">Reference</p>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="panel panel-default align-middle" style="width: 90%; line-height: 25%;">
+                            <div id="reference-text" class="panel-body">None</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <button id="reference-change-button" class="btn btn-default btn-block align-middle disabled">Change</button>
+                    </div>
+                </div>
+            </div>
+            <div id="viewer" class="col-md-4 panel panel-default pre-scrollable" style="margin-left: 1%; margin-right: 1%;">
+                <h2>Components/Children Visualizer</h2>
+                <h4>After selecting a Prefab, click on Components or Children.</h4>
+            </div>
+            <div id="components-list" class="col-md-3 panel panel-default pre-scrollable" style="margin-left: 1%;">
+                
+            </div>
+        </div>
+        <div class="row equal" style="margin-left: 5%; margin-right: 5%;">
+            <div class="col-md-8 panel panel-default pre-scrollable" style="margin-right: 1%;">
+                <div id="explorer" class ="row equal">
+                    <!-- Files and Folders -->
+                </div>
+            </div>
+            <div class="col-md-3 panel panel-default" style="margin-left: 1%;">
+                <div class="row equal" style="height: 30%; margin-top: 7.5%;">
+                    <div class="col-md-6">
+                        <button id="add-button" class="btn btn-default btn-block">Add</button>
+                    </div>
+                    <div class="col-md-6">
+                        <button id="delete-button" class="btn btn-default btn-block">Delete</button>
+                    </div>
+                </div>
+                <div class="row equal" style="height: 30%">
+                    <div class="col-md-6">
+                        <button id="save-button" class="btn btn-default btn-block">Save</button>
+                    </div>
+                    <div class="col-md-6">
+                        <button id="move-button" class="btn btn-default btn-block">Move</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Components Modal -->
+        <div id="component-edit-modal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title text-centered">Edit</h4>
+                </div>
+                <div id="modal-attribute-list" class="modal-body">
+                    <!-- Attributes -->
+                </div>
+                <div class="modal-footer">
+                    <button id="modal-close" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+        </div>
+
+        <script src="scripts/prefabEditor/bundle.js" type="text/javascript"></script>
+    </body>
+</html>

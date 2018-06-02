@@ -1,0 +1,42 @@
+{
+	"children": [],
+	"components": {
+		"AnimationRenderable": {
+			"currentAnimationIndexCount": "0",
+			"currentAnimationName": "",
+			"enabled": "true",
+			"flipX": "false",
+			"flipY": "false",
+			"frame": "(0, 0)",
+			"isAnimating": "false",
+			"lastAnimationTime": "0",
+			"loop": "false"
+		},
+		"Dirty": {
+			"enabled": "false"
+		},
+		"PrimitiveRenderable": {
+			"color": "",
+			"enabled": "true",
+			"format": "0"
+		},
+		"SpriteRenderable": {
+			"alpha": "1",
+			"enabled": "true"
+		},
+		"Transform": {
+			"enabled": "true",
+			"gridPosition": "(0, 0)",
+			"orientation": "2",
+			"position": "(0, 0)"
+		},
+		"Visible": {
+			"enabled": "false"
+		}
+	},
+	"dir": "Game",
+	"name": "TargetCell",
+	"parent": "",
+	"tag": "",
+	"topParent": ""
+}

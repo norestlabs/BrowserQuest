@@ -1,0 +1,20 @@
+{
+	"children": [],
+	"components": {
+		"Dirty": {
+			"enabled": "true"
+		},
+		"TileAnimationRenderable": {
+			"enabled": "true",
+			"lastTime": "0"
+		},
+		"TileRenderable": {
+			"enabled": "true"
+		}
+	},
+	"dir": "Game",
+	"name": "Tile",
+	"parent": "",
+	"tag": "",
+	"topParent": ""
+}

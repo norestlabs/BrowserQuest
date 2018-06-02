@@ -1,0 +1,36 @@
+.glyphicon-align-vertical {
+  vertical-align: middle;
+}
+
+.text-centered {
+  text-align: center;
+}
+
+.equal {
+  display: flex;
+  display: -webkit-flex;
+  flex-wrap: wrap;
+}
+
+.thumbnail {
+  border: 0 none;
+  box-shadow: none;
+}
+
+.file-selected {
+  background-color: cadetblue;
+}
+
+.file-selected p {
+  color: white;
+}
+
+.align-middle {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.align-left {
+  text-align: left;
+}
