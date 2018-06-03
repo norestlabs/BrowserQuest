@@ -189,6 +189,7 @@ function main (config : ConfigData) : void {
     }
 
     app.get("/map", function (req, res) {
+		// TODO: improve, how to get the requesting player's map?
         let edit = req.body;
         if (edit === "edit") {
             res.json(worlds[0].map.getMapDataMessage())
