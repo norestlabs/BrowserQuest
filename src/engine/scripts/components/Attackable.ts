@@ -1,7 +1,7 @@
 import Component from "@engine/Component";
 import { Bitfield } from "@common/bitfield";
 import * as _ from "underscore";
-import * as Logger from "@common/logger";
+import * as Logger from "@common/Logger";
 
 /**
  * Component representing whether an entity can be attacked or not.
