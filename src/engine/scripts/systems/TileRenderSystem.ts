@@ -11,7 +11,8 @@ export default class TileRenderSystem implements System {
     enabled = true;
 
     public update () : void {
-        let tileset = Graphics.GetCurrentTileset(), tilesetwidth = tileset.width / Graphics.tilesize;
+        const tileset = Graphics.GetCurrentTileset();
+        const tilesetwidth = (tileset ? tileset.width : 1) / Graphics.tilesize;
         if (Graphics.isDesktop) {
             Graphics.ClearScreen(Graphics.Context.Normal);
         }
