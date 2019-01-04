@@ -12,3 +12,6 @@ dist/prefabEditor
 dist/server
 dist/shared
 dist/public/scripts
+
+configuration/server.json
+configuration/client.local.json
