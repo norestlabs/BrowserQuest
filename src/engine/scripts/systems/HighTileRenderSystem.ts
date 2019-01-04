@@ -15,8 +15,8 @@ export default class HighTileRenderSystem implements System {
     }
 
     public update () : void {
-        let tileset = Graphics.GetCurrentTileset(),
-            tilesetwidth = tileset.width / Graphics.tilesize;
+        const tileset = Graphics.GetCurrentTileset();
+        const tilesetwidth = (tileset ? tileset.width : 1) / Graphics.tilesize;
         let camera = EntityManager.getEntityWithTag("MainCamera");
         let camView = camera.getComponent(CameraView);
         let map = EntityManager.getFirstComponent(TiledMap);

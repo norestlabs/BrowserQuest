@@ -12,8 +12,8 @@ export default class StaticRenderSystem implements System {
     enabled = false;
 
     public update () : void {
-        let tileset = Graphics.GetCurrentTileset(),
-            tilesetwidth = tileset.width / Graphics.tilesize;
+        const tileset = Graphics.GetCurrentTileset();
+        const tilesetwidth = (tileset ? tileset.width : 1) / Graphics.tilesize;
         let camera = EntityManager.getEntityWithTag("MainCamera");
         let map = EntityManager.getFirstComponent(TiledMap);
 
@@ -37,8 +37,8 @@ export default class StaticRenderSystem implements System {
     }
 
     private drawTerrain (map : TiledMap) : void {
-        let tileset = Graphics.GetCurrentTileset(),
-            tilesetwidth = tileset.width / Graphics.tilesize;
+        const tileset = Graphics.GetCurrentTileset();
+        const tilesetwidth = (tileset ? tileset.width : 1) / Graphics.tilesize;
         let area = EntityManager.getEntityWithTag("MainCamera").getComponent(CameraView).area;
         
         map.forEachVisibleTile(function (id : number, index : number) {
