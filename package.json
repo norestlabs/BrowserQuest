@@ -30,7 +30,7 @@
     "jquery": "^3.3.1",
     "json-stable-stringify": "^1.0.1",
     "log": ">0",
-    "memcache": "0.3.0",
+    "memcache": "./local_modules/memcache",
     "modernizr": "^3.6.0",
     "module-alias": "^2.0.6",
     "noderify": "^3.0.2",

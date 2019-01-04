@@ -1,0 +1,64 @@
+{
+  "_args": [
+    [
+      "memcache@0.3.0",
+      "C:\\_Work\\BrowserQuest"
+    ]
+  ],
+  "_from": "memcache@0.3.0",
+  "_id": "memcache@0.3.0",
+  "_inBundle": false,
+  "_integrity": "sha1-vbuXjqS+4P3TFmmXsYg9KX4IWdw=",
+  "_location": "/memcache",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "memcache@0.3.0",
+    "name": "memcache",
+    "escapedName": "memcache",
+    "rawSpec": "0.3.0",
+    "saveSpec": null,
+    "fetchSpec": "0.3.0"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/memcache/-/memcache-0.3.0.tgz",
+  "_spec": "0.3.0",
+  "_where": "C:\\_Work\\BrowserQuest",
+  "author": {
+    "name": "Tim Eggert",
+    "email": "tim@elbart.com"
+  },
+  "bugs": {
+    "url": "https://github.com/elbart/node-memcache/issues"
+  },
+  "description": "simple memcache client",
+  "devDependencies": {
+    "expresso": ">=0.7.0"
+  },
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "engines": {
+    "node": ">=0.6.0"
+  },
+  "homepage": "https://github.com/elbart/node-memcache",
+  "keywords": [
+    "memcache",
+    "memcached"
+  ],
+  "main": "./lib/memcache",
+  "name": "memcache",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/elbart/node-memcache.git"
+  },
+  "scripts": {
+    "test": "make test",
+    "test-cov": "make test-cov"
+  },
+  "version": "0.3.0"
+}

@@ -1,4 +1,4 @@
-import * as Logger from "@common/logger";
+import * as Logger from "@common/Logger";
 
 let groups : { [name : string] : { message : string, type : Logger.LogType }[] } = {};
 let currentGroup : string | null = null;
