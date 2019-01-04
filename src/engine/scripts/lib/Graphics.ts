@@ -463,7 +463,7 @@ let CreateHurtSprite = function (original : Sprite) : Sprite {
     c.width = width;
     c.height = height;
     ctx.drawImage(original.image, 0, 0, width, height);
-    spriteData = ctx.getImageData(0, 0, width, height);
+    spriteData = ctx.getImageData(0, 0, width === 0 ? 1 : width, height === 0 ? 1 : height);
 
     data = spriteData.data;
 
@@ -496,7 +496,7 @@ export let CreateSilhouetteSprite = function (original : Sprite) {
     c.width = width;
     c.height = height;
     ctx.drawImage(original.image, 0, 0, width, height);
-    let imageData = ctx.getImageData(0, 0, width, height);
+    let imageData = ctx.getImageData(0, 0, width === 0 ? 1 : width, height === 0 ? 1 : height);
     data = imageData.data;
     fdata = new Uint8ClampedArray(data.length);
 
@@ -750,7 +750,7 @@ export let initHurtSprites = function () {
         c.width = width;
         c.height = height;
         ctx.drawImage(original.image, 0, 0, width, height);
-        let imageData = ctx.getImageData(0, 0, width, height);
+        let imageData = ctx.getImageData(0, 0, width === 0 ? 1 : width, height === 0 ? 1 : height);
         data = imageData.data;
         fdata = new Uint8ClampedArray(data.length);
 
@@ -885,7 +885,7 @@ let initSilhouettesWorker = function () {
         c.width = width;
         c.height = height;
         ctx.drawImage(original.image, 0, 0, width, height);
-        let imageData = ctx.getImageData(0, 0, width, height);
+        let imageData = ctx.getImageData(0, 0, width === 0 ? 1 : width, height === 0 ? 1 : height);
         data = imageData.data;
         fdata = new Uint8ClampedArray(data.length);
 
