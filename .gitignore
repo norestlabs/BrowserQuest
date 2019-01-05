@@ -15,3 +15,5 @@ dist/public/scripts
 
 configuration/server.json
 configuration/client.local.json
+
+.env
