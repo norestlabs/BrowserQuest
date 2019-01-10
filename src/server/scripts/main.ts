@@ -19,8 +19,7 @@ import * as glob from "glob";
 import * as bodyParser from "body-parser";
 import * as path from "path";
 import Prefab from "@common/prefab";
-import * as Stardust from "@common/Stardust";
-import * as StardustAPI from "@common/Stardust/api";
+import { stardustAPI } from "@common/Stardust/api";
 
 export let log: Log;
 
@@ -42,9 +41,8 @@ export interface ConfigData {
     [ component : string ] : { [ attribute : string ] : string };
 }*/
 
-console.log(Stardust, StardustAPI);
-
 function main(config: ConfigData): void {
+  console.log(process.env.gameData);
   // Create express server
   let app = express();
   // We need both http and websocket server working together
@@ -275,10 +273,10 @@ process.argv.forEach(function (val, index, array) {
 getConfigFile(defaultConfigPath, function (defaultConfig: ConfigData) {
   getConfigFile(customConfigPath, function (localConfig: ConfigData) {
     if (localConfig) {
-      main(localConfig);
+      gameInit(localConfig);
     }
     else if (defaultConfig) {
-      main(defaultConfig);
+      gameInit(defaultConfig);
     }
     else {
       console.error("Server cannot start without any configuration file.");
@@ -286,3 +284,36 @@ getConfigFile(defaultConfigPath, function (defaultConfig: ConfigData) {
     }
   });
 });
+
+function gameInit(config: any) {
+  const gameDataPath = './configuration/game.data.json';
+  fs.exists(gameDataPath, (exists: boolean) => {
+    if (exists) {
+      let gameData: any = fs.readFileSync(gameDataPath);
+      gameData = JSON.parse(gameData.toString());
+      const { gameAddr } = gameData;
+      stardustAPI.getters.game.getAll({ gameAddr }).then(res => {
+        process.env.gameData = JSON.stringify(gameData);
+        main(config);
+      }).catch(err => {
+        console.error(`Game at address ${gameAddr} not found.`);
+        fs.unlinkSync(gameDataPath);
+        process.exit(1);
+      })
+    } else {
+      const deployData = {
+        owner: process.env.WALLET_ADDR,
+        name: 'BrowserQuest',
+        symbol: 'BQG',
+        desc: 'HTML5/JavaScript multiplayer game experiment.',
+        image: 'BrowserQuest',
+        timestamp: Date.now()
+      };
+      stardustAPI.setters.game.deploy(deployData, process.env.WALLET_PRIV).then(res => {
+        fs.writeFileSync(gameDataPath, JSON.stringify(res.data));
+        process.env.gameData = JSON.stringify(res.data);
+        main(config);
+      })
+    }
+  })
+}

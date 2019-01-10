@@ -114,7 +114,7 @@ const createPostJSON: CreatePostJSONObjType<typeof hash> = secondLevelMap(hash, 
 
 const v = 'v1';
 export const wrapper = axios.create({
-    baseURL: `http://api.sandbox.stardust.com/${v}`,
+    baseURL: process.env.GAME_API || `http://api.sandbox.stardust.com/${v}`,
     timeout: 25000,
     headers: {'Content-Type': 'application/json'}
 });

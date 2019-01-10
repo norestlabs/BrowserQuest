@@ -135,6 +135,6 @@
     "mapEditor-ts": "npm run tsc -- -p src/tsconfig.mapEditor.json",
     "mapEditor-bundle": "browserify dist/mapEditor/scripts/home.js -o dist/public/scripts/mapEditor/bundle.js",
     "tsc": "tsc",
-    "start": "npm run buildclient && npm run buildserver && node dist/server/scripts/main.js"
+    "start": "npm run buildserver && node dist/server/scripts/main.js"
   }
 }
