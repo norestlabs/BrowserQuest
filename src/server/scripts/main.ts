@@ -20,6 +20,7 @@ import * as bodyParser from "body-parser";
 import * as path from "path";
 import Prefab from "@common/prefab";
 import * as Stardust from "@common/Stardust";
+import * as StardustAPI from "@common/Stardust/api";
 
 export let log: Log;
 
@@ -41,7 +42,7 @@ export interface ConfigData {
     [ component : string ] : { [ attribute : string ] : string };
 }*/
 
-console.log(Stardust);
+console.log(Stardust, StardustAPI);
 
 function main(config: ConfigData): void {
   // Create express server

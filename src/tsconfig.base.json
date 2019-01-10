@@ -24,6 +24,7 @@
             "@resources/*": ["../resources/*"],
             "@engine/*": ["engine/scripts/*"],
             "*": ["../node_modules/*"]
-        }
+        },
+        "lib": ["es2017", "dom"]
     }
 }
