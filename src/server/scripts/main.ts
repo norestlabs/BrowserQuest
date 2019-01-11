@@ -42,7 +42,6 @@ export interface ConfigData {
 }*/
 
 function main(config: ConfigData): void {
-  console.log(process.env.gameData);
   // Create express server
   let app = express();
   // We need both http and websocket server working together
@@ -294,7 +293,7 @@ function gameInit(config: any) {
       const { gameAddr } = gameData;
       stardustAPI.getters.game.getAll({ gameAddr }).then(res => {
         process.env.gameData = JSON.stringify(gameData);
-        main(config);
+        assetsInit(config, gameAddr);
       }).catch(err => {
         console.error(`Game at address ${gameAddr} not found.`);
         fs.unlinkSync(gameDataPath);
@@ -312,8 +311,39 @@ function gameInit(config: any) {
       stardustAPI.setters.game.deploy(deployData, process.env.WALLET_PRIV).then(res => {
         fs.writeFileSync(gameDataPath, JSON.stringify(res.data));
         process.env.gameData = JSON.stringify(res.data);
-        main(config);
+        assetsInit(config, res.data.gameAddr);
       })
+    }
+  })
+}
+
+function assetsInit(config: any, gameAddr: string) {
+  const gameAssetsPath = './configuration/game.assets.json';
+  let gameAssets: any = fs.readFileSync(gameAssetsPath);
+  gameAssets = JSON.parse(gameAssets.toString());
+  const assets = gameAssets.Armors.concat(gameAssets.Weapons);
+
+  stardustAPI.getters.asset.getAll({ gameAddr }).then(async (res) => {
+    if (res.data.assets.length === 0) {
+      for (let i = 0; i < assets.length; i++) {
+        const asset = assets[i];
+        const assetData = Object.assign({
+          gameAddr,
+          timestamp: Date.now()
+        }, asset);
+        try {
+          await stardustAPI.setters.asset.add(assetData, process.env.WALLET_PRIV);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+      stardustAPI.getters.asset.getAll({ gameAddr }).then(res => {
+        process.env.gameAssets = JSON.stringify(res.data.assets);
+        main(config);
+      });
+    } else {
+      process.env.gameAssets = JSON.stringify(res.data.assets);
+      main(config);
     }
   })
 }

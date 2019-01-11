@@ -1,0 +1,118 @@
+{
+  "Armors": [
+    {
+      "name": "Firefox",
+      "desc": "Armor - Firefox",
+      "image": "firefox",
+      "rarity": 1,
+      "cap": 0,
+      "val": 20
+    },
+    {
+      "name": "ClothArmor",
+      "desc": "Armor - ClothArmor",
+      "image": "clotharmor",
+      "rarity": 1,
+      "cap": 0,
+      "val": 21
+    },
+    {
+      "name": "Leather",
+      "desc": "Armor - LeatherArmor",
+      "image": "leatherarmor",
+      "rarity": 1,
+      "cap": 0,
+      "val": 22
+    },
+    {
+      "name": "MailArmor",
+      "desc": "Armor - MailArmor",
+      "image": "mailarmor",
+      "rarity": 2,
+      "cap": 0,
+      "val": 23
+    },
+    {
+      "name": "PlateArmor",
+      "desc": "Armor - PlateArmor",
+      "image": "platearmor",
+      "rarity": 2,
+      "cap": 0,
+      "val": 24
+    },
+    {
+      "name": "RedArmor",
+      "desc": "Armor - RedArmor",
+      "image": "redarmor",
+      "rarity": 3,
+      "cap": 0,
+      "val": 25
+    },
+    {
+      "name": "GoldenArmor",
+      "desc": "Armor - GoldenArmor",
+      "image": "goldenarmor",
+      "rarity": 3,
+      "cap": 0,
+      "val": 26
+    }
+  ],
+  "Weapons": [
+    {
+      "name": "Sword1",
+      "desc": "Armor - Sword1",
+      "image": "sword1",
+      "rarity": 1,
+      "cap": 0,
+      "val": 60
+    },
+    {
+      "name": "Sword2",
+      "desc": "Armor - Sword2",
+      "image": "sword2",
+      "rarity": 1,
+      "cap": 0,
+      "val": 61
+    },
+    {
+      "name": "Axe",
+      "desc": "Armor - Axe",
+      "image": "axe",
+      "rarity": 1,
+      "cap": 0,
+      "val": 62
+    },
+    {
+      "name": "BlueSword",
+      "desc": "Armor - BlueSword",
+      "image": "bluesword",
+      "rarity": 2,
+      "cap": 0,
+      "val": 63
+    },
+    {
+      "name": "RedSword",
+      "desc": "Armor - RedSword",
+      "image": "redsword",
+      "rarity": 2,
+      "cap": 0,
+      "val": 64
+    },
+    {
+      "name": "GoldenSword",
+      "desc": "Armor - GoldenSword",
+      "image": "goldensword",
+      "rarity": 3,
+      "cap": 0,
+      "val": 65
+    },
+    {
+      "name": "MorningStar",
+      "desc": "Armor - MorningStar",
+      "image": "morningstar",
+      "rarity": 3,
+      "cap": 0,
+      "val": 66
+    }
+  ]
+}
