@@ -527,6 +527,7 @@ export default class ClientSystem implements System {
         let message : Messages.ClientHello = [
             GameTypes.Messages.HELLO,
             player.getComponent(Components.Identifiable).name,
+            player.getComponent(Components.Identifiable).addr,
             GameTypes.getKindFromString(equipment.armorName),
             GameTypes.getKindFromString(equipment.weaponName)
         ];
@@ -630,7 +631,7 @@ export default class ClientSystem implements System {
      * 
      * @memberof Game
      */
-    private connect (username : string) : void {
+    private connect (username : string, addr : string) : void {
         let connecting = false; // always in dispatcher mode in the build version
         GameState.setCurrentStatus(GameState.Status.Connecting);
 
@@ -641,11 +642,11 @@ export default class ClientSystem implements System {
         //>>includeStart("devHost", pragmas.devHost);
         if (config.local) {
             Logger.log("Starting game with local dev config.", Logger.LogType.Debug);
-            client.setServerOptions(config.local.host, config.local.port, username);
+            client.setServerOptions(config.local.host, config.local.port, username, addr);
         }
         else {
             Logger.log("Starting game with default dev config.", Logger.LogType.Debug);
-            client.setServerOptions(config.dev.host, config.dev.port, username);
+            client.setServerOptions(config.dev.host, config.dev.port, username, addr);
         }
         optionsSet = true;
         //>>includeEnd("devHost");
@@ -653,26 +654,26 @@ export default class ClientSystem implements System {
         //>>includeStart("prodHost", pragmas.prodHost);
         if (!optionsSet) {
             Logger.log("Starting game with build config.", Logger.LogType.Debug);
-            client.setServerOptions(config.build.host, config.build.port, username);
+            client.setServerOptions(config.build.host, config.build.port, username, addr);
         }
         //>>includeEnd("prodHost");
 
         //>>excludeStart("prodHost", pragmas.prodHost);
         let cconfig = config.local || config.dev;
         if (cconfig) {
-            this.clientConnect(client, username, cconfig.dispatcher); // false if the client connects directly to a game server
+            this.clientConnect(client, username, addr, cconfig.dispatcher); // false if the client connects directly to a game server
             connecting = true;
         }
         //>>excludeEnd("prodHost");
 
         //>>includeStart("prodHost", pragmas.prodHost);
         if (!connecting) {
-            this.clientConnect(client, username, true); // always use the dispatcher in production
+            this.clientConnect(client, username, addr, true); // always use the dispatcher in production
         }
         //>>includeEnd("prodHost");
     }
     
-    private clientConnect (client : Components.Client, username : string, dispatcherMode? : boolean) : void {
+    private clientConnect (client : Components.Client, username : string, addr : string, dispatcherMode? : boolean) : void {
         let self = this, url : string;
         // TODO: CHANGE
         if (Graphics.isMobile) {
@@ -707,7 +708,7 @@ export default class ClientSystem implements System {
                 console.log("Dispatched: ");
                 console.log(reply);
                 if (reply.status === 'OK') {
-                    self.dispatch(reply.host, reply.port, username);
+                    self.dispatch(reply.host, reply.port, username, addr);
                 }
                 else if (reply.status === 'FULL') {
                     console.log("BrowserQuest is currently at maximum player population. Please retry later.");
@@ -761,10 +762,10 @@ export default class ClientSystem implements System {
         }
     }
 
-    private dispatch (host : string, port : number, username : string) : void {
+    private dispatch (host : string, port : number, username : string, addr : string) : void {
         Logger.log("Dispatched to game server " + host + ":" + port, Logger.LogType.Debug);
 
-        this.connect(username); // connect to actual game server
+        this.connect(username, addr); // connect to actual game server
     }
 
     private onSpawnedCharacter (entity : Entity, x : number, y : number, orientation : GameTypes.Orientations, targetId? : number) : void {
@@ -834,7 +835,7 @@ export default class ClientSystem implements System {
 
     public onNotify (params : any) : void {
         if (isEvent(params, GameEvents.Game_Connect)) {
-            this.connect(params.username);
+            this.connect(params.username, params.addr);
         }
         else if (isEvent(params, GameEvents.Zoning_Start)) {
             this.sendZone();

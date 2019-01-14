@@ -1,10 +1,10 @@
-import {socketIOConnection} from "./ws";
+import { socketIOConnection } from "./ws";
 import World from "./worldserver";
 import Character from "./character";
 import * as Utils from "@common/utils";
 import Types from "@common/gametypes";
 import * as _ from "underscore";
-import {log} from "./main";
+import { log } from "./main";
 import * as Properties from "./properties";
 import Item from "./item";
 import Mob from "./mob";
@@ -12,43 +12,46 @@ import Chest from "./chest";
 import * as Formulas from "./formulas";
 import * as Messages from "@common/messageTypes";
 import { CheckpointArea } from "@common/GameMap";
+import { stardustAPI } from "@common/Stardust/api";
+const StardustAPI = stardustAPI(process.env.GAME_API);
 
 export default class Player extends Character {
 
-    server : World;
-    connection : socketIOConnection;
+    server: World;
+    connection: socketIOConnection;
 
-    hasEnteredGame : boolean;
-    isDead : boolean;
-    haters : { [index : number] : Mob };
-    lastCheckpoint : CheckpointArea;
-    disconnectTimeout : NodeJS.Timer;
-    firepotionTimeout : NodeJS.Timer;
-    name : string;
+    hasEnteredGame: boolean;
+    isDead: boolean;
+    haters: { [index: number]: Mob };
+    lastCheckpoint: CheckpointArea;
+    disconnectTimeout: NodeJS.Timer;
+    firepotionTimeout: NodeJS.Timer;
+    name: string;
+    addr: string;
 
-    zone_callback : () => void;
-    move_callback : (x : number, y : number) => void;
-    lootmove_callback : (x : number, y : number) => void;
-    message_callback : (message : any[]) => void;
-    exit_callback : () => void;
-    requestpos_callback : () => { x : number, y : number };
-    broadcast_callback : (message : Messages.Types, ignoreSelf : boolean) => void;
-    broadcastzone_callback : (message : Messages.Types, ignoreSelf : boolean) => void;
-    orient_callback : () => void;   // TODO: unused
+    zone_callback: () => void;
+    move_callback: (x: number, y: number) => void;
+    lootmove_callback: (x: number, y: number) => void;
+    message_callback: (message: any[]) => void;
+    exit_callback: () => void;
+    requestpos_callback: () => { x: number, y: number };
+    broadcast_callback: (message: Messages.Types, ignoreSelf: boolean) => void;
+    broadcastzone_callback: (message: Messages.Types, ignoreSelf: boolean) => void;
+    orient_callback: () => void;   // TODO: unused
 
-    weaponLevel : number;
-    armorLevel : number;
+    weaponLevel: number;
+    armorLevel: number;
 
-    armor : Types.Entities;
-    weapon : Types.Entities;
+    armor: Types.Entities;
+    weapon: Types.Entities;
 
 
-    constructor (connection : socketIOConnection, worldServer : World) {
+    constructor(connection: socketIOConnection, worldServer: World) {
 
         super(connection.id, "player", Types.Entities.Warrior, 0, 0);
 
         let self = this;
-        
+
         this.server = worldServer;
         this.connection = connection;
 
@@ -57,10 +60,10 @@ export default class Player extends Character {
         this.haters = {};
         this.lastCheckpoint = null;
         this.disconnectTimeout = null;
-        
-        this.connection.listen(function(message : Messages.Types) {
+
+        this.connection.listen(function (message: Messages.Types) {
             let action = message[0];
-            
+
             log.debug("Received: " + message);
             if (!self.hasEnteredGame && action !== Types.Messages.HELLO) { // HELLO must be the first message
                 self.connection.close("Invalid handshake message: " + message);
@@ -70,26 +73,28 @@ export default class Player extends Character {
                 self.connection.close("Cannot initiate handshake twice: " + message);
                 return;
             }
-            
+
             self.resetTimeout();
-            
+
             if (action === Types.Messages.HELLO) {
                 let m = <Messages.ClientHello>message;
 
                 let name = Utils.sanitize(m[1]);
-                
+                let addr = Utils.sanitize(m[2]);
+
                 // If name was cleared by the sanitizer, give a default name.
                 // Always ensure that the name is not longer than a maximum length.
                 // (also enforced by the maxlength attribute of the name input element).
                 self.name = (name === "") ? "lorem ipsum" : name.substr(0, 15);
-                
+                self.addr = addr;
+
                 self.kind = Types.Entities.Warrior;
-                self.equipArmor(m[2]);
-                self.equipWeapon(m[3]);
+                self.equipArmor(m[3]);
+                self.equipWeapon(m[4]);
                 self.orientation = Utils.randomOrientation();
                 self.updateHitPoints();
                 self.updatePosition();
-                
+
                 self.server.addPlayer(self);
                 self.server.enter_callback(self);
 
@@ -107,7 +112,7 @@ export default class Player extends Character {
             else if (action === Types.Messages.CHAT) {
                 let m = <Messages.ClientChat>message;
                 let msg = Utils.sanitize(m[1]);
-                
+
                 // Sanitized messages may become empty. No need to broadcast empty chat messages.
                 if (msg && msg !== "") {
                     msg = msg.substr(0, 60); // Enforce maxlength of chat input
@@ -123,11 +128,11 @@ export default class Player extends Character {
                 if (self.move_callback) {
                     let x = m[1],
                         y = m[2];
-                    
+
                     if (self.server.isValidPosition(x, y)) {
                         self.setPosition(x, y);
                         self.clearTarget();
-                        
+
                         self.broadcast([
                             Types.Messages.MOVE,
                             self.id,
@@ -142,7 +147,7 @@ export default class Player extends Character {
                 let m = <Messages.ClientLootMove>message;
                 if (self.lootmove_callback) {
                     self.setPosition(m[1], m[2]);
-                    
+
                     let item = <Item>self.server.getEntityById(m[3]);
                     if (item) {
                         self.clearTarget();
@@ -165,7 +170,7 @@ export default class Player extends Character {
             else if (action === Types.Messages.ATTACK) {
                 let m = <Messages.ClientAttack>message;
                 let mob = self.server.getEntityById(m[1]);
-                
+
                 if (mob) {
                     self.setTarget(mob);
                     self.server.broadcastAttacker(self);
@@ -177,7 +182,7 @@ export default class Player extends Character {
 
                 if (mob) {
                     let dmg = Formulas.dmg(self.weaponLevel, (<Mob>mob).armorLevel);
-                    
+
                     if (dmg > 0) {
                         (<Mob>mob).receiveDamage(dmg, self.id);
                         self.server.handleMobHate(mob.id, self.id, dmg);
@@ -192,7 +197,7 @@ export default class Player extends Character {
                 if (mob && self.hitPoints > 0) {
                     self.hitPoints -= Formulas.dmg((<Mob>mob).weaponLevel, self.armorLevel);
                     self.server.handleHurtEntity(self, <Mob>mob);
-                    
+
                     if (self.hitPoints <= 0) {
                         self.isDead = true;
                         if (self.firepotionTimeout) {
@@ -204,18 +209,18 @@ export default class Player extends Character {
             else if (action === Types.Messages.LOOT) {
                 let m = <Messages.ClientLoot>message;
                 let item = <Item>self.server.getEntityById(m[1]);
-                
+
                 if (item) {
                     let kind = item.kind;
-                    
+
                     if (Types.isItem(kind)) {
                         self.broadcast(item.getDespawnMessage());
                         self.server.removeEntity(item);
-                        
+
                         if (kind === Types.Entities.FirePotion) {
                             self.updateHitPoints();
                             self.broadcast(self.getEquipMessage(Types.Entities.Firefox));
-                            self.firepotionTimeout = setTimeout(function() {
+                            self.firepotionTimeout = setTimeout(function () {
                                 self.broadcast(self.getEquipMessage(self.armor)); // return to normal after 15 sec
                                 self.firepotionTimeout = null;
                             }, 15000);
@@ -223,16 +228,16 @@ export default class Player extends Character {
                         }
                         else if (Types.isHealingItem(kind)) {
                             let amount;
-                            
+
                             switch (kind) {
-                                case Types.Entities.Flask: 
+                                case Types.Entities.Flask:
                                     amount = 40;
                                     break;
-                                case Types.Entities.Burger: 
+                                case Types.Entities.Burger:
                                     amount = 100;
                                     break;
                             }
-                            
+
                             if (!self.hasFullHealth()) {
                                 self.regenHealthBy(amount);
                                 self.server.pushToPlayer(self, self.getHealthMessage());
@@ -248,18 +253,18 @@ export default class Player extends Character {
             else if (action === Types.Messages.TELEPORT) {
                 let m = <Messages.ClientTeleport>message;
                 let x = m[1], y = m[2];
-                
+
                 if (self.server.isValidPosition(x, y)) {
                     self.setPosition(x, y);
                     self.clearTarget();
-                    
+
                     self.broadcast([
                         Types.Messages.TELEPORT,
                         self.id,
                         self.x,
                         self.y
                     ]);
-                    
+
                     self.server.handlePlayerVanish(self);
                     self.server.pushRelevantEntityListTo(self);
                 }
@@ -284,170 +289,196 @@ export default class Player extends Character {
                 }
             }
         });
-        
-        this.connection.onClose(function() {
-            if(self.firepotionTimeout) {
+
+        this.connection.onClose(function () {
+            if (self.firepotionTimeout) {
                 clearTimeout(self.firepotionTimeout);
             }
             clearTimeout(self.disconnectTimeout);
-            if(self.exit_callback) {
+            if (self.exit_callback) {
                 self.exit_callback();
             }
         });
-        
+
         this.connection.sendUTF8("go"); // Notify client that the HELLO/WELCOME handshake can start
     }
-    
-    destroy () : void {
+
+    destroy(): void {
         let self = this;
-        
-        this.forEachAttacker(function(mob) {
+
+        this.forEachAttacker(function (mob) {
             mob.clearTarget();
         });
         this.attackers = {};
-        
-        this.forEachHater(function(mob) {
+
+        this.forEachHater(function (mob) {
             mob.forgetPlayer(self.id);
         });
         this.haters = {};
     }
-    
-    getState () : [number, Types.Entities, number, number,
+
+    getState(): [number, Types.Entities, number, number,
         [Types.Orientations, number | undefined, string, Types.Entities, Types.Entities] |
         [Types.Orientations, number | undefined] | undefined] {
         let basestate = this._getBaseState(),
-            state : [Types.Orientations, number | undefined, string, Types.Entities, Types.Entities] = [
+            state: [Types.Orientations, number | undefined, string, Types.Entities, Types.Entities] = [
                 this.orientation, this.target ? this.target : undefined, this.name, this.armor, this.weapon
             ];
 
-        let s : [number, Types.Entities, number, number,
+        let s: [number, Types.Entities, number, number,
             [Types.Orientations, number | undefined, string, Types.Entities, Types.Entities]]
-        = [basestate[0], basestate[1], basestate[2], basestate[3], state];
+            = [basestate[0], basestate[1], basestate[2], basestate[3], state];
         return s;
     }
-    
-    send (message : Messages.Types) : void {
+
+    send(message: Messages.Types): void {
         this.connection.send(message);
     }
-    
-    broadcast (message : Messages.Types, ignoreSelf? : boolean) : void {
+
+    broadcast(message: Messages.Types, ignoreSelf?: boolean): void {
         if (this.broadcast_callback) {
             this.broadcast_callback(message, ignoreSelf === undefined ? true : ignoreSelf);
         }
     }
-    
-    broadcastToZone (message : Messages.Types, ignoreSelf? : boolean) : void {
+
+    broadcastToZone(message: Messages.Types, ignoreSelf?: boolean): void {
         if (this.broadcastzone_callback) {
             this.broadcastzone_callback(message, ignoreSelf === undefined ? true : ignoreSelf);
         }
     }
-    
-    onExit (callback : () => void) : void {
+
+    onExit(callback: () => void): void {
         this.exit_callback = callback;
     }
-    
-    onMove (callback : (x : number, y : number) => void) : void {
+
+    onMove(callback: (x: number, y: number) => void): void {
         this.move_callback = callback;
     }
-    
-    onLootMove (callback : (x : number, y : number) => void) : void {
+
+    onLootMove(callback: (x: number, y: number) => void): void {
         this.lootmove_callback = callback;
     }
-    
-    onZone (callback : () => void) : void {
+
+    onZone(callback: () => void): void {
         this.zone_callback = callback;
     }
-    
+
     // TODO: Unused
-    onOrient (callback : () => void) : void {
+    onOrient(callback: () => void): void {
         this.orient_callback = callback;
     }
-    
-    onMessage (callback : (message : any[]) => void) : void {
+
+    onMessage(callback: (message: any[]) => void): void {
         this.message_callback = callback;
     }
-    
-    onBroadcast (callback : (message : Messages.Types, ignoreSelf : boolean) => void) : void {
+
+    onBroadcast(callback: (message: Messages.Types, ignoreSelf: boolean) => void): void {
         this.broadcast_callback = callback;
     }
-    
-    onBroadcastToZone (callback : (message : Messages.Types, ignoreSelf : boolean) => void) : void {
+
+    onBroadcastToZone(callback: (message: Messages.Types, ignoreSelf: boolean) => void): void {
         this.broadcastzone_callback = callback;
     }
-    
-    getEquipMessage (item : Types.Entities) : Messages.EquipItem {
+
+    getEquipMessage(item: Types.Entities): Messages.EquipItem {
         return [Types.Messages.EQUIP,
-                this.id,
-                item];
+        this.id,
+            item];
     }
-    
-    addHater (mob : Mob) : void {
+
+    addHater(mob: Mob): void {
         if (mob) {
             if (!(mob.id in this.haters)) {
                 this.haters[mob.id] = mob;
             }
         }
     }
-    
-    removeHater (mob : Mob) : void {
-        if(mob && mob.id in this.haters) {
+
+    removeHater(mob: Mob): void {
+        if (mob && mob.id in this.haters) {
             delete this.haters[mob.id];
         }
     }
-    
-    forEachHater (callback : (m : Mob) => void) : void {
-        _.each(this.haters, function(mob : Mob) {
+
+    forEachHater(callback: (m: Mob) => void): void {
+        _.each(this.haters, function (mob: Mob) {
             callback(mob);
         });
     }
-    
-    equipArmor (kind : Types.Entities) : void {
+
+    equipArmor(kind: Types.Entities): void {
         this.armor = kind;
         this.armorLevel = Properties.getArmorLevel(kind);
     }
-    
-    equipWeapon (kind : Types.Entities) : void {
+
+    equipWeapon(kind: Types.Entities): void {
         this.weapon = kind;
         this.weaponLevel = Properties.getWeaponLevel(kind);
     }
-    
-    equipItem (item : Item) : void {
+
+    equipItem(item: Item): void {
         if (item) {
-            log.debug(this.name + " equips " + Types.getKindAsString(item.kind));
-            
-            if (Types.isArmor(item.kind)) {
-                this.equipArmor(item.kind);
-                this.updateHitPoints();
-                this.send([Types.Messages.HP, this.maxHitPoints]);
-            }
-            else if (Types.isWeapon(item.kind)) {
-                this.equipWeapon(item.kind);
+            if (item.isMint) {
+                const transferData = {
+                    gameAddr: process.env.gameAddr,
+                    tokenId: item.kind < 30 ? (item.kind - 20) : (item.kind - 60 + 7),
+                    from: process.env.WALLET_ADDR,
+                    to: this.addr,
+                    amount: 1,
+                    timestamp: Date.now()
+                };
+                StardustAPI.setters.token.transfer(transferData, process.env.WALLET_PRIV).then(
+                    (res: any) => {
+                        console.log(res.data);
+                        log.debug(this.name + " equips " + Types.getKindAsString(item.kind));
+
+                        if (Types.isArmor(item.kind)) {
+                            this.equipArmor(item.kind);
+                            this.updateHitPoints();
+                            this.send([Types.Messages.HP, this.maxHitPoints]);
+                        }
+                        else if (Types.isWeapon(item.kind)) {
+                            this.equipWeapon(item.kind);
+                        }
+                    }
+                )
+            } else {
+                log.debug(this.name + " equips " + Types.getKindAsString(item.kind));
+
+                if (Types.isArmor(item.kind)) {
+                    this.equipArmor(item.kind);
+                    this.updateHitPoints();
+                    this.send([Types.Messages.HP, this.maxHitPoints]);
+                }
+                else if (Types.isWeapon(item.kind)) {
+                    this.equipWeapon(item.kind);
+                }
             }
         }
     }
-    
-    updateHitPoints () : void {
+
+    updateHitPoints(): void {
         this.resetHitPoints(Formulas.hp(this.armorLevel));
     }
-    
-    updatePosition () : void {
-        if(this.requestpos_callback) {
+
+    updatePosition(): void {
+        if (this.requestpos_callback) {
             let pos = this.requestpos_callback();
             this.setPosition(pos.x, pos.y);
         }
     }
-    
-    onRequestPosition (callback : () => { x : number, y : number }) : void {
+
+    onRequestPosition(callback: () => { x: number, y: number }): void {
         this.requestpos_callback = callback;
     }
-    
-    resetTimeout () : void {
+
+    resetTimeout(): void {
         clearTimeout(this.disconnectTimeout);
         // TODO: change timeout
         this.disconnectTimeout = setTimeout(() => this.timeout.bind(this), 1000 * 60 * 15); // 15 min.
     }
-    
-    timeout () : void {
+
+    timeout(): void {
         this.connection.sendUTF8("timeout");
         this.connection.close("Player was idle for too long");
     }

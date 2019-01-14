@@ -19,7 +19,7 @@ import * as glob from "glob";
 import * as bodyParser from "body-parser";
 import * as path from "path";
 import Prefab from "@common/prefab";
-import * as Stardust from "@common/Stardust";
+import { stardustAPI } from "@common/Stardust/api";
 
 export let log: Log;
 
@@ -40,8 +40,6 @@ export interface ConfigData {
 /*interface Prefab {
     [ component : string ] : { [ attribute : string ] : string };
 }*/
-
-console.log(Stardust);
 
 function main(config: ConfigData): void {
   // Create express server
@@ -274,10 +272,10 @@ process.argv.forEach(function (val, index, array) {
 getConfigFile(defaultConfigPath, function (defaultConfig: ConfigData) {
   getConfigFile(customConfigPath, function (localConfig: ConfigData) {
     if (localConfig) {
-      main(localConfig);
+      gameInit(localConfig);
     }
     else if (defaultConfig) {
-      main(defaultConfig);
+      gameInit(defaultConfig);
     }
     else {
       console.error("Server cannot start without any configuration file.");
@@ -285,3 +283,71 @@ getConfigFile(defaultConfigPath, function (defaultConfig: ConfigData) {
     }
   });
 });
+
+const StardustAPI = stardustAPI(process.env.GAME_API);
+
+function gameInit(config: any) {
+  const gameDataPath = './configuration/game.data.json';
+  fs.exists(gameDataPath, (exists: boolean) => {
+    if (exists) {
+      let gameData: any = fs.readFileSync(gameDataPath);
+      gameData = JSON.parse(gameData.toString());
+      const { gameAddr } = gameData;
+      StardustAPI.getters.game.getAll({ gameAddr }).then((res: any) => {
+        process.env.gameData = JSON.stringify(gameData);
+        process.env.gameAddr = gameAddr;
+        tokensInit(config, gameAddr);
+      }).catch(err => {
+        console.error(`Game at address ${gameAddr} not found.`);
+        fs.unlinkSync(gameDataPath);
+        process.exit(1);
+      })
+    } else {
+      const deployData = {
+        owner: process.env.WALLET_ADDR,
+        name: 'BrowserQuest',
+        symbol: 'BQG',
+        desc: 'HTML5/JavaScript multiplayer game experiment.',
+        image: 'BrowserQuest',
+        timestamp: Date.now()
+      };
+      StardustAPI.setters.game.deploy(deployData, process.env.WALLET_PRIV).then((res: any) => {
+        fs.writeFileSync(gameDataPath, JSON.stringify(res.data));
+        process.env.gameData = JSON.stringify(res.data);
+        process.env.gameAddr = res.data.gameAddr;
+        tokensInit(config, res.data.gameAddr);
+      })
+    }
+  })
+}
+
+function tokensInit(config: any, gameAddr: string) {
+  const gameTokensPath = './configuration/game.tokens.json';
+  let gameTokens: any = fs.readFileSync(gameTokensPath);
+  gameTokens = JSON.parse(gameTokens.toString());
+  const tokens = gameTokens.Armors.concat(gameTokens.Weapons);
+
+  StardustAPI.getters.token.getAll({ gameAddr }).then(async (res: any) => {
+    if (res.data.tokens.length === 0) {
+      for (let i = 0; i < tokens.length; i++) {
+        const token = tokens[i];
+        const tokenData = Object.assign({
+          gameAddr,
+          timestamp: Date.now()
+        }, token);
+        try {
+          await StardustAPI.setters.token.add(tokenData, process.env.WALLET_PRIV);
+        } catch (e) {
+          console.error(e);
+        }
+      }
+      StardustAPI.getters.token.getAll({ gameAddr }).then((res: any) => {
+        process.env.gameTokens = JSON.stringify(res.data.tokens);
+        main(config);
+      });
+    } else {
+      process.env.gameTokens = JSON.stringify(res.data.tokens);
+      main(config);
+    }
+  })
+}

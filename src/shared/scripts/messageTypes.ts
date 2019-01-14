@@ -214,10 +214,11 @@ export type Blink = [GameTypes.Messages, number];
  * 
  * * [0] - The action identifier.
  * * [1] - The player's username.
- * * [2] - The kind of the player's current armor.
- * * [3] - The kind of the player's current weapon.
+ * * [2] - The player's address.
+ * * [3] - The kind of the player's current armor.
+ * * [4] - The kind of the player's current weapon.
  */
-export type ClientHello = [GameTypes.Messages, string, GameTypes.Entities, GameTypes.Entities];
+export type ClientHello = [GameTypes.Messages, string, string, GameTypes.Entities, GameTypes.Entities];
 
 /**
  * Message used for the server to know the user has moved to a

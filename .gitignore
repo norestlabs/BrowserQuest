@@ -15,5 +15,6 @@ dist/public/scripts
 
 configuration/server.json
 configuration/client.local.json
+configuration/game.data.json
 
 .env

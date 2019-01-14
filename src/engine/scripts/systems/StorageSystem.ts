@@ -31,8 +31,9 @@ export default class StorageSystem implements System {
         else if (isEvent(params, GameEvents.Client_Welcome)) {
             let equipment = params.player.getComponent(Equipment);
             let name = params.player.getComponent(Identifiable).name;
+            let addr = params.player.getComponent(Identifiable).addr;
             if (!StorageManager.hasAlreadyPlayed()) {
-                StorageManager.initPlayer(name);
+                StorageManager.initPlayer(name, addr);
                 StorageManager.savePlayer(Graphics.GetPlayerImage(equipment.armorName, equipment.weaponName),
                                         equipment.armorName,
                                         equipment.weaponName);
@@ -41,6 +42,7 @@ export default class StorageSystem implements System {
             else {
                 App.showMessage("Welcome back to BrowserQuest!");
                 StorageManager.setPlayerName(name);
+                StorageManager.setPlayerAddr(addr);
             }
         }
         else if (isEvent(params, GameEvents.Client_CharacterKilled)) {            

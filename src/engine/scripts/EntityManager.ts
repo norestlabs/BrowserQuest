@@ -218,7 +218,7 @@ module EntityManager {
     export let getEntityWithID = function (id : string | number) : Entity | null {
         if (id in entities_e) return entities_e[id];
         else {
-            Logger.log(`Entity with ID ${id} wasn't found.`, Logger.LogType.Warn);
+            // Logger.log(`Entity with ID ${id} wasn't found.`, Logger.LogType.Warn);
             return null;
         }
     }
@@ -253,7 +253,7 @@ module EntityManager {
         return e;
     }
 
-    export let createEntityFromLoadedPrefab = function (entityName : string, parent : Entity | null, kind? : GameTypes.Entities, id? : number, name? : string) : Entity {
+    export let createEntityFromLoadedPrefab = function (entityName : string, parent : Entity | null, kind? : GameTypes.Entities, id? : number, name? : string, addr? : string) : Entity {
         let e = new Entity(entityName, parent !== null ? parent : world);
         e.id = EntityIDGenerator();
 
@@ -283,6 +283,7 @@ module EntityManager {
         if (identifiable !== null && id) {
             identifiable.id = id;
             if (name !== undefined) identifiable.name = name;
+            if (addr !== undefined) identifiable.addr = addr;
         }
 
         entities_e[e.id] = e;

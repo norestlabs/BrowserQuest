@@ -1,5 +1,5 @@
 {
   "restartable": "rs",
   "ext": "ts,json",
-  "ignore": ["dist"]
+  "ignore": ["dist", "configuration"]
 }

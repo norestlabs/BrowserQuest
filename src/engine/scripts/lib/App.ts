@@ -3,9 +3,16 @@ import * as Utils from "@utils/utils";
 export let supportsWorkers = !!(<any>window).Worker;
 
 let inputName = $('#nameinput');
+let inputAddr = $('#addrinput');
 inputName.val('');
+inputAddr.val('');
 export let GetInputName = function () : string {
     let input = inputName.val();
+    if (input != null) return input.toString();
+    else return '';
+}
+export let GetInputAddr = function () : string {
+    let input = inputAddr.val();
     if (input != null) return input.toString();
     else return '';
 }
@@ -19,6 +26,11 @@ export let BlurInputName = function () : void {
 let playerName = $('#playername');
 export let GetPlayerName = function () : string {
     return playerName.html().toString();
+}
+
+let playerAddr = $('#playeraddr');
+export let GetPlayerAddr = function () : string {
+    return playerAddr.html().toString();
 }
 
 let createCharacterPlayButton = $('#createcharacter .play');
@@ -157,8 +169,9 @@ export let hideIntro = function (hidden_callback : () => void) : void {
 
 export let toggleButton = function () {
     let name = GetInputName();
+    let addr = GetInputAddr();
     let button = GetCreateCharacterPlayButton();
-    if (name.length > 0) {
+    if (name.length > 0 && addr.length > 0) {
         button.removeClass('disabled');
         GetDefaultCharacter().removeClass('disabled');
     }
