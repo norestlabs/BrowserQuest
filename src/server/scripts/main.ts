@@ -295,7 +295,7 @@ function gameInit(config: any) {
       const { gameAddr } = gameData;
       StardustAPI.getters.game.getAll({ gameAddr }).then((res: any) => {
         process.env.gameData = JSON.stringify(gameData);
-        assetsInit(config, gameAddr);
+        tokensInit(config, gameAddr);
       }).catch(err => {
         console.error(`Game at address ${gameAddr} not found.`);
         fs.unlinkSync(gameDataPath);
@@ -313,38 +313,39 @@ function gameInit(config: any) {
       StardustAPI.setters.game.deploy(deployData, process.env.WALLET_PRIV).then((res: any) => {
         fs.writeFileSync(gameDataPath, JSON.stringify(res.data));
         process.env.gameData = JSON.stringify(res.data);
-        assetsInit(config, res.data.gameAddr);
+        tokensInit(config, res.data.gameAddr);
       })
     }
   })
 }
 
-function assetsInit(config: any, gameAddr: string) {
-  const gameAssetsPath = './configuration/game.assets.json';
-  let gameAssets: any = fs.readFileSync(gameAssetsPath);
-  gameAssets = JSON.parse(gameAssets.toString());
-  const assets = gameAssets.Armors.concat(gameAssets.Weapons);
+function tokensInit(config: any, gameAddr: string) {
+  const gameTokensPath = './configuration/game.tokens.json';
+  let gameTokens: any = fs.readFileSync(gameTokensPath);
+  gameTokens = JSON.parse(gameTokens.toString());
+  const tokens = gameTokens.Armors.concat(gameTokens.Weapons);
 
   StardustAPI.getters.token.getAll({ gameAddr }).then(async (res: any) => {
-    if (res.data.assets.length === 0) {
-      for (let i = 0; i < assets.length; i++) {
-        const asset = assets[i];
-        const assetData = Object.assign({
+    console.log(res.data);
+    if (res.data.tokens.length === 0) {
+      for (let i = 0; i < tokens.length; i++) {
+        const token = tokens[i];
+        const tokenData = Object.assign({
           gameAddr,
           timestamp: Date.now()
-        }, asset);
+        }, token);
         try {
-          await StardustAPI.setters.token.add(assetData, process.env.WALLET_PRIV);
+          await StardustAPI.setters.token.add(tokenData, process.env.WALLET_PRIV);
         } catch (e) {
           console.error(e);
         }
       }
       StardustAPI.getters.token.getAll({ gameAddr }).then((res: any) => {
-        process.env.gameAssets = JSON.stringify(res.data.assets);
+        process.env.gameTokens = JSON.stringify(res.data.tokens);
         main(config);
       });
     } else {
-      process.env.gameAssets = JSON.stringify(res.data.assets);
+      process.env.gameTokens = JSON.stringify(res.data.tokens);
       main(config);
     }
   })
