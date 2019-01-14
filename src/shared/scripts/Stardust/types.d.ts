@@ -46,14 +46,14 @@ export namespace API {
 }
 
 export namespace IPFSMeta {
-    export interface AssetData {readonly assetId: number; readonly name: string; readonly desc: string; readonly image: string; readonly rarity: number; readonly cap: number;}
+    export type TokenData = Readonly<{tokenId: number; name: string; desc: string; image: string; rarity: number; cap: number}>
     export interface BoxData {readonly boxId: number; readonly name: string; readonly desc: string; readonly image: string;}
     export interface GameData extends baseData {readonly name: string; readonly symbol: string; readonly desc: string; readonly image: string;}
-    export interface GameDataFile {readonly game: GameData; readonly assets: ReadonlyArray<AssetData>; readonly boxes: ReadonlyArray<BoxData>;}
+    export interface GameDataFile {readonly game: GameData; readonly tokens: ReadonlyArray<TokenData>; readonly boxes: ReadonlyArray<BoxData>;}
 }
 
-export namespace Asset {
-    export interface metaData extends baseData {readonly assetId: number; readonly name: string; readonly desc: string; readonly image: string; readonly rarity: number; readonly cap: number; readonly val: number; readonly owners: ReadonlyArray<address>; readonly totalSupply: number;}
+export namespace Token {
+    export interface metaData extends baseData {readonly tokenId: number; readonly name: string; readonly desc: string; readonly image: string; readonly rarity: number; readonly cap: number; readonly val: number; readonly owners: ReadonlyArray<address>; readonly totalSupply: number;}
     export interface promisedMetaData extends maybePromisedProps<metaData> {}
 
     export interface deployData extends baseData {readonly cap: number; readonly desc: string; readonly image: string; readonly name: string; readonly rarity: rarityType; readonly val: number; readonly timestamp: number;}
@@ -61,11 +61,11 @@ export namespace Asset {
     export interface deployDataSigned extends deployData, API.signedData {}
     export interface deployErrorObj extends API.baseErrorsObj {readonly rarity_cap?: string;}
 
-    export interface mintData extends baseData {readonly assetId: number; readonly to: addr; readonly amount: number; readonly timestamp: number;}
+    export interface mintData extends baseData {readonly tokenId: number; readonly to: addr; readonly amount: number; readonly timestamp: number;}
     export interface mintDataSigned extends mintData, API.signedData {}
 
-    export interface tradeData {readonly from: addr; readonly to: addr; readonly amount: number; readonly timestamp: number; readonly assetId: number; readonly gameAddr: addr;}
-    export interface tradeDataSigned extends tradeData, API.signedData {}
+    export interface transferData {readonly from: addr; readonly to: addr; readonly amount: number; readonly timestamp: number; readonly tokenId: number; readonly gameAddr: addr;}
+    export interface transferDataSigned extends transferData, API.signedData {}
 }
 
 export namespace Box {
@@ -96,23 +96,23 @@ export namespace Game {
     export interface deployData {readonly name: string; readonly symbol: string; readonly desc: string; readonly image: string; readonly owner: addr; readonly timestamp: number;}
     export interface deployDataSigned extends deployData, API.signedData {}
 
-    export interface transferData extends baseData {readonly from: addr; readonly to: addr; readonly timestamp: number;}
+    export interface transferData extends baseData {readonly from: addr; readonly to: addr; timestamp: number;}
     export interface transferDataSigned extends transferData, API.signedData {}
 }
 
 export namespace Loan {
-    export interface metaData extends baseData {readonly loanId: number; readonly isActive: boolean; readonly lender: addr; readonly borrower: addr; readonly assetId: number; readonly amount: number; readonly start: number; readonly length: number;}
+    export interface metaData extends baseData {readonly loanId: number; readonly isActive: boolean; readonly lender: addr; readonly borrower: addr; readonly tokenId: number; readonly amount: number; readonly start: number; readonly length: number;}
     export interface promisedMetaData extends maybePromisedProps<metaData> {}
 
-    export interface metaDataArray extends baseData {readonly isActive: ReadonlyArray<boolean>; readonly lender: ReadonlyArray<address>; readonly borrower: ReadonlyArray<address>; readonly assetId: ReadonlyArray<number>; readonly amount: ReadonlyArray<number>; readonly start: ReadonlyArray<number>; readonly length: ReadonlyArray<number>;}
+    export interface metaDataArray extends baseData {readonly isActive: ReadonlyArray<boolean>; readonly lender: ReadonlyArray<address>; readonly borrower: ReadonlyArray<address>; readonly tokenId: ReadonlyArray<number>; readonly amount: ReadonlyArray<number>; readonly start: ReadonlyArray<number>; readonly length: ReadonlyArray<number>;}
 
-    export interface offerPrivateData extends baseData {readonly lender: addr; readonly borrower: addr; readonly assetId: number; readonly amount: number; readonly length: number; timestamp: number;}
+    export interface offerPrivateData extends baseData {readonly lender: addr; readonly borrower: addr; readonly tokenId: number; readonly amount: number; readonly length: number; timestamp: number;}
     export interface offerPrivateDataSigned extends offerPrivateData, API.signedData {}
 
-    export interface offerPublicData extends baseData {readonly lender: addr; readonly assetId: number; readonly amount: number; readonly length: number; readonly timestamp: number;}
+    export interface offerPublicData extends baseData {readonly lender: addr; readonly tokenId: number; readonly amount: number; readonly length: number; readonly timestamp: number;}
     export interface offerPublicDataSigned extends offerPublicData, API.signedData {}
 
-    export interface handlePublicData extends baseData {readonly loanId: number; readonly timestamp: number;}
+    export interface handlePublicData extends baseData {readonly loanId: number; readonly timestamp: number; decision: boolean;}
     export interface handlePublicDataSigned extends handlePublicData, API.signedData {}
 
     export interface handlePrivateData extends baseData {readonly loanId: number; readonly decision: boolean; readonly timestamp: number;}
@@ -123,15 +123,15 @@ export namespace Loan {
 }
 
 export namespace Shop {
-    export interface metaData extends baseData {readonly id: number; readonly assetId: number; readonly amount: number; readonly created: number; readonly gameAddr: addr; readonly caller: addr;}
+    export interface metaData extends baseData {readonly id: number; readonly tokenId: number; readonly amount: number; readonly created: number; readonly gameAddr: addr; readonly caller: addr;}
     export interface promisedMetaData extends maybePromisedProps<metaData> {}
 
-    export interface metaDataArray {readonly ids: number[]; readonly assetIds: number[]; readonly amounts: number[]; readonly createds: number[]; readonly gameAddrs: addr[]; readonly callers: addr[];}
+    export interface metaDataArray {readonly ids: number[]; readonly tokenIds: number[]; readonly amounts: number[]; readonly createds: number[]; readonly gameAddrs: addr[]; readonly callers: addr[];}
 
-    export interface tokenToCashData extends baseData {readonly assetId: number; readonly amount: number; readonly timestamp: number;}
+    export interface tokenToCashData extends baseData {readonly tokenId: number; readonly amount: number; readonly timestamp: number;}
     export interface tokenToCashDataSigned extends tokenToCashData, API.signedData {}
 
-    export interface cashToTokenData extends baseData {readonly assetId: number; readonly amount: number; readonly timestamp: number;}
+    export interface cashToTokenData extends baseData {readonly tokenId: number; readonly amount: number; readonly timestamp: number;}
     export interface cashToTokenDataSigned extends cashToTokenData, API.signedData {}
 
     export interface tokenToTokenData extends baseData {readonly fromId: number; readonly fromAmount: number; readonly toId: number; readonly toAmount: number; readonly timestamp: number;}
@@ -162,7 +162,7 @@ export namespace Trade {
 
 export namespace Wrapper {
     export interface Setters {
-        asset: {add: Asset.deployData; mint: Asset.mintData; trade: Asset.tradeData};
+        token: {add: Token.deployData; mint: Token.mintData; transfer: Token.transferData};
         box: {add: Box.deployData; buy: Box.buyData; remove: Box.removeData; update: Box.updateData};
         game: {deploy: Game.deployData; transfer: Game.transferData};
         loan: {finish: Loan.finishData; handlePrivate: Loan.handlePrivateData; handlePublic: Loan.handlePrivateData; offerPrivate: Loan.offerPrivateData; offerPublic: Loan.offerPublicData};
@@ -171,10 +171,10 @@ export namespace Wrapper {
     }
 
     export interface Getters {
-        asset: {getAll: {gameAddr: addr}; getSpecific: {gameAddr: addr; assetId: num}; getAssetsOf: {gameAddr: addr; userAddr: addr}};
+        token: {getAll: {gameAddr: addr}; getSpecific: {gameAddr: addr; tokenId: num}; getTokensOf: {gameAddr: addr; userAddr: addr}};
         box: {getAll: {gameAddr: addr}; getDetails: {gameAddr: addr; boxId: num}};
         game: {getAll: {}; getBalanceOf: {gameAddr: addr; userAddr: addr}; getDetails: {gameAddr: addr}};
-        loan: {getSpecific: {gameAddr: addr; loanId: num}; getFreeBalanceOf: {gameAddr: addr; userAddr: addr; assetId: num}; getLoanedBalanceOf: {gameAddr: addr; userAddr: addr; assetId: num}; getCreatedCount: {gameAddr: addr}; getDeletedCount: {gameAddr: addr}};
+        loan: {getSpecific: {gameAddr: addr; loanId: num}; getFreeBalanceOf: {gameAddr: addr; userAddr: addr; tokenId: num}; getLoanedBalanceOf: {gameAddr: addr; userAddr: addr; tokenId: num}; getCreatedCount: {gameAddr: addr}; getDeletedCount: {gameAddr: addr}};
         shop: {getOrderCount: {gameAddr: addr};getSpecific: {gameAddr: addr; orderId: num};getUserOrder: {gameAddr: addr; userAddr: addr; orderId: num};getUserOrderCountInGame: {gameAddr: addr; userAddr: addr};getUserOrders: {gameAddr: addr; userAddr: addr}};
         trade: {getClosedCount: {gameAddr: addr}; getOpenCount: {gameAddr: addr}; getSpecific: {gameAddr: addr; index: num}; getUserTradeInGame: {gameAddr: addr; userAddr: addr; index: num}; getUserTradeCount: {gameAddr: addr; userAddr: addr}; getUserTradeIdsInGame: {gameAddr: addr; userAddr: addr}};
     }
@@ -196,12 +196,12 @@ export type str = string;    // Short type aliases for common types //
 export type addr = address;  // ----------------------------------- //
 
 type GameTypes = Game.deployData | Game.transferData;
-type AssetTypes = Asset.deployData | Asset.mintData | Asset.tradeData;
+type TokenTypes = Token.deployData | Token.mintData | Token.transferData;
 type LoanTypes = Loan.offerPublicData | Loan.offerPrivateData | Loan.handlePrivateData | Loan.handlePublicData | Loan.finishData;
 type BoxTypes = Box.deployData | Box.updateData | Box.buyData | Box.removeData;
 type ShopTypes = Shop.tokenToCashData | Shop.cashToTokenData | Shop.tokenToTokenData;
 
-export type DataTypes = GameTypes | BoxTypes | LoanTypes | AssetTypes | ShopTypes;
+export type DataTypes = GameTypes | BoxTypes | LoanTypes | TokenTypes | ShopTypes;
 
 export type ArgsTuple<T, U> =
     T extends () => U ? [''] :

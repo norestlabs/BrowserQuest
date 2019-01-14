@@ -1,222 +1,299 @@
-import {Asset, Box, DataTypes, Game, hexString, keccak256Hash, Loan, Shop, solidityParam, solidityValue, Trade, Wallet, Wrapper} from './types';
+import {DataTypes, hexString, keccak256Hash, solidityParam, solidityValue, Wallet, Wrapper} from './types';
+
+// import * as paramType from './data/paramtype.json';
+// import * as paramTypes from './data/paramtypes.json';
+
+// import * as routesObj from './data/routes.json';
 
 import axios from 'axios';
 import {fromPairs} from 'ramda';
+
+const paramType = {
+    "address": ["borrower", "owner", "lender", "taker", "to", "from", "gameAddr"],
+    "bool": ["decision", "isValid"],
+    "string": ["name", "image", "desc", "symbol"],
+    "uint256": ["tokenId", "amount", "boxId", "cap", "loanId", "index", "offeredAmount", "offeredId", "rarity", "timestamp", "val", "wantedAmount", "wantedId", "length", "fromId", "toId", "toAmount", "fromAmount"],
+    "uint256[]": ["tokens"]
+};
+
+const paramTypes = {
+    "game": {
+        "deploy": ["owner", "name", "symbol", "desc", "image", "timestamp"],
+        "transfer": ["gameAddr", "from", "to", "timestamp"]
+    },
+    "token": {
+        "add": ["gameAddr", "name", "rarity", "cap", "val", "desc", "image", "timestamp"],
+        "mint": ["gameAddr", "tokenId", "to", "amount", "timestamp"],
+        "transfer": ["gameAddr","tokenId","from","to","amount","timestamp"]
+    },
+    "loan": {
+        "offerPrivate": ["gameAddr", "lender", "borrower", "tokenId", "amount", "length", "timestamp"],
+        "offerPublic": ["gameAddr", "lender", "tokenId", "amount", "length", "timestamp"],
+        "handlePrivate": ["gameAddr", "loanId", "decision", "timestamp"],
+        "handlePublic": ["gameAddr", "loanId", "timestamp"],
+        "finish": ["gameAddr", "loanId", "timestamp"]
+    },
+    "box": {
+        "add": ["gameAddr", "name", "desc", "image", "tokens", "timestamp"],
+        "update": ["gameAddr", "boxId", "isValid", "name", "desc", "image", "tokens", "timestamp"],
+        "buy": ["gameAddr", "boxId", "timestamp"],
+        "remove": ["gameAddr", "boxId", "timestamp"]
+    },
+    "shop": {
+        "tokenToCash": ["gameAddr", "tokenId", "amount", "timestamp"],
+        "cashToToken": ["gameAddr", "tokenId", "amount", "timestamp"],
+        "tokenToToken": ["gameAddr", "fromId", "fromAmount", "toId", "toAmount", "timestamp"]
+    },
+    "trade": {
+        "offerPrivate": ["gameAddr", "taker", "offeredId", "offeredAmount", "wantedId", "wantedAmount","timestamp"],
+        "offerPublic": ["gameAddr", "offeredId", "offeredAmount", "wantedId", "wantedAmount", "timestamp"],
+        "takePrivate": ["gameAddr", "index", "timestamp"],
+        "takePublic": ["gameAddr","index","timestamp"],
+        "remove": ["gameAddr", "index", "timestamp"]
+    }
+};
+
+const routesObj = {
+    "getters": {
+        "token": {
+            "getHash": ["/tokens/token-hash"],
+            "getTokensOf": ["/tokensOf"],
+            "getDetails": ["/tokens"],
+            "getAll": ["/tokens"]
+        },
+        "box": {
+            "getHash": ["/boxes/box-hash"],
+            "getDetails": ["/boxes"],
+            "getAll": ["/boxes"]
+        },
+        "game": {
+            "getBalanceOf": ["/games/balance"],
+            "getHash": ["/games/hash"],
+            "getDetails": ["/games"],
+            "getAll": ["/games"]
+        },
+        "loan": {
+            "getCreatedCount": ["/loans/created-loans-count"],
+            "getDeletedCount": ["/loans/deleted-loans-count"],
+            "getFreeBalanceOf": ["/loans/free-balance-of"],
+            "getLoanedBalanceOf": ["/loans/loaned-balance-of"],
+            "getSpecific": ["/loans"]
+        },
+        "shop": {
+            "getOrderCount": ["/shop/order-count"],
+            "getSpecific": ["/shop/orders"],
+            "getUserOrderCountInGame": ["/shop/orders/count"],
+            "getUserOrderDetails": ["/shop/game-orders"],
+            "getUserOrders": ["/shop/game-orders"],
+            "getUserOrder": ["/shop/game-orders"]
+        },
+        "trade": {
+            "getClosedCount": ["/trades/closed-count"],
+            "getOpenCount": ["/trades/open-count"],
+            "getTrade": ["/trades"],
+            "getUserTradeInGame": ["/trades/game"],
+            "getUserTradeCountDetails": ["/trades/user-count"],
+            "getUserTradeIdsInGame": ["/trades/game/id"]
+        }
+    },
+    "setters": {
+        "token": {
+            "add": {
+                "routes": ["/tokens"],
+                "paramKeys": ["gameAddr"]
+            },
+            "mint": {
+                "routes": ["/tokens/mint"],
+                "paramKeys": ["gameAddr", "tokenId"]
+            },
+            "transfer": {
+                "routes": ["/tokens/transfer"],
+                "paramKeys": ["gameAddr", "tokenId"]
+            }
+        },
+        "box": {
+            "add": {
+                "routes": ["/boxes"],
+                "paramKeys": ["gameAddr"]
+            },
+            "buy": {
+                "routes": ["/boxes/buy"],
+                "paramKeys": ["gameAddr",
+                    "boxId"]
+            },
+            "remove": {
+                "routes": ["/boxes/delete"],
+                "paramKeys": ["gameAddr", "boxId"]
+            },
+            "update": {
+                "routes": ["/boxes/update"],
+                "paramKeys": ["gameAddr", "boxId"]
+            }
+        },
+        "game": {
+            "deploy": {
+                "routes": ["/games"],
+                "paramKeys": ['']
+            },
+            "transfer": {
+                "routes": ["/games/transfer"],
+                "paramKeys": ["gameAddr"]
+            }
+        },
+        "loan": {
+            "finish": {
+                "routes": ["/loans/finish"],
+                "paramKeys": ["gameAddr", "loanId"]
+            },
+            "handlePrivate": {
+                "routes": ["/loans/handle-private"],
+                "paramKeys": ["gameAddr", "loanId"]
+            },
+            "handlePublic": {
+                "routes": ["/loans/handle-public"],
+                "paramKeys": ["gameAddr", "loanId"]
+            },
+            "offerPrivate": {
+                "routes": ["/loans/offer-private"],
+                "paramKeys": ["gameAddr", "tokenId"]
+            },
+            "offerPublic": {
+                "routes": ["/loans/offer-public"],
+                "paramKeys": ["gameAddr", "tokenId"]
+            }
+        },
+        "shop": {
+            "cashToToken": {
+                "routes": ["/shop/cash-to-token"],
+                "paramKeys": ["gameAddr"]
+            },
+            "tokenToCash": {
+                "routes": ["/shop/token-to-cash"],
+                "paramKeys": ["gameAddr"]
+            },
+            "tokenToToken": {
+                "routes": ["/shop/token-to-token"],
+                "paramKeys": ["gameAddr"]
+            }
+        },
+        "trade": {
+            "offerPrivate": {
+                "routes": ["/trades/offer-private"],
+                "paramKeys": ["gameAddr"]
+            },
+            "offerPublic": {
+                "routes": ["/trades/offer-public"],
+                "paramKeys": ["gameAddr"]
+            },
+            "remove": {
+                "routes": ["/trades/remove"],
+                "paramKeys": ["gameAddr", "index"]
+            },
+            "takePrivate": {
+                "routes": ["/trades/take-private"],
+                "paramKeys": ["gameAddr",  "index"]
+            },
+            "takePublic": {
+                "routes": ["/trades/take-public"],
+                "paramKeys": ["gameAddr", "index"]
+            }
+        }
+    }
+};
+
 // import Web3 from 'web3';
 const Web3 = require('web3');
 const web3 = new Web3();
 
 interface sigObj {readonly message: string; readonly signature: string;}
-interface HashObjType {[key: string]: { [key: string]: hashFunc<any>};}
 
-type FirstInput<T> = T extends (arg: infer R) => any ? R : never;
-type CreatePostJSON2<T extends DataTypes> = (f: hashFunc<T>) => postJSONFunc<T>;
+type X = Wrapper.Setters;
 
-type CreatePostJSONObjType<T extends HashObjType> = {
-    [key1 in keyof T]: {
-        [key2 in keyof T[key1]]: ReturnType<CreatePostJSON2<FirstInput<T[key1][key2]>>>;
-    }
-};
-
-type hashFunc<T> = (data: T) => keccak256Hash;
+type hashFunc<T>        = (data: T) => keccak256Hash;
 type hashAndSignFunc<T> = (data: T, privKey: hexString) => hexString;
-type postJSONFunc<T> = (data: T, privKey: hexString) => T & {signedMessage: hexString};
+type postJSONFunc<T>    = (data: T, privKey: hexString) => T & {signedMessage: hexString};
 
-const gameParamTypes: ReadonlyArray<solidityParam>              = ['address', 'string', 'string', 'string', 'string', 'uint256'];
-const gameTransferParamTypes: ReadonlyArray<solidityParam>      = ['address', 'address', 'address', 'uint256'];
+type HashObjType           = {[key1 in keyof X]: {[key2 in keyof X[key1]]: hashFunc<X[key1][key2]>; }};
+type HashAndSignObjType    = {[key1 in keyof X]: {[key2 in keyof X[key1]]: hashAndSignFunc<X[key1][key2]>;}};
+type CreatePostJSONObjType = {[key1 in keyof X]: {[key2 in keyof X[key1]]: postJSONFunc<X[key1][key2]>;}};
 
-const mintParamTypes: ReadonlyArray<solidityParam>              = ['address', 'uint256', 'address', 'uint256', 'uint256'];
-const assetParamTypes: ReadonlyArray<solidityParam>             = ['address', 'string', 'uint256', 'uint256', 'uint256', 'string', 'string', 'uint256'];
-const tradeParamTypes: ReadonlyArray<solidityParam>             = ['address', 'uint256', 'address', 'address', 'uint256', 'uint256'];
+// ! const invParamTypes = invertObj(paramType);
 
-const offerPrivateLoanParamTypes: ReadonlyArray<solidityParam>  = ['address', 'address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'];
-const offerPublicLoanParamTypes: ReadonlyArray<solidityParam>   = ['address', 'address', 'uint256', 'uint256', 'uint256', 'uint256'];
-const handlePrivateLoanParamTypes: ReadonlyArray<solidityParam> = ['address', 'uint256', 'bool', 'uint256'];
-const handlePublicLoanParamTypes: ReadonlyArray<solidityParam>  = ['address', 'uint256', 'uint256'];
-const finishLoanParamTypes: ReadonlyArray<solidityParam>        = ['address', 'bool', 'uint256'];
-
-const boxCreateParamTypes: ReadonlyArray<solidityParam>         = ['address', 'string', 'string', 'string', 'uint256[]', 'uint256'];
-const boxUpdateParamTypes: ReadonlyArray<solidityParam>         = ['address', 'uint256', 'bool', 'string', 'string', 'string', 'uint256[]', 'uint256'];
-const boxBuyParamTypes: ReadonlyArray<solidityParam>            = ['address', 'uint256', 'uint256'];
-const boxRemoveParamTypes: ReadonlyArray<solidityParam>         = ['address', 'uint256', 'uint256'];
-
-const tokenToCashParamTypes: ReadonlyArray<solidityParam>       = ['address', 'uint256', 'uint256', 'uint256'];
-const cashToTokenParamTypes: ReadonlyArray<solidityParam>       = ['address', 'uint256', 'uint256', 'uint256'];
-const tokenToTokenParamTypes: ReadonlyArray<solidityParam>      = ['address', 'uint256', 'uint256', 'uint256', 'uint256', 'uint256'];
-
-const offerPrivateTradeParamTypes: ReadonlyArray<solidityParam> = ['address', 'address', 'uint256', 'uint256', 'uint256', 'uint256', 'uint256'];
-const offerPublicTradeParamTypes: ReadonlyArray<solidityParam>  = ['address', 'uint256', 'uint256', 'uint256', 'uint256', 'uint256'];
-const takePrivateParamTypes: ReadonlyArray<solidityParam>       = ['address', 'uint256', 'uint256'];
-const takePublicParamTypes: ReadonlyArray<solidityParam>        = ['address', 'uint256', 'uint256'];
-const removeTradeParamTypes: ReadonlyArray<solidityParam>       = ['address', 'uint256', 'uint256'];
-
-const objMap = <T>(obj: T, f: any) => Object.assign({}, ...Object.entries(obj).map(([k, v]) => ({[k]: f(v)})));
-const secondLevelMap = <T, U>(obj: T, f: any) => objMap(obj, (x: U) => objMap(x, f));
+const objMap = <T>(obj: T, f: any) => Object.assign({}, ...Object.entries(obj).map(([k, val]) => ({[k]: f(val)})));
+const secondLevelMap = <T, U>(obj: T, f: any) => objMap(obj, (a: U) => objMap(a, f));
 
 const sigToString = (sig: sigObj): hexString => sig.signature + sig.message.slice(2);
 
 const signRaw = (msg: string, privKey: string): sigObj => web3.eth.accounts.sign(msg, privKey);
 export const createRawWallet = (): Wallet => web3.eth.accounts.create();
 
-export const createWallet = (): ReadonlyArray<string> => {
-    const{address, privateKey}: Wallet = createRawWallet();
+export const createWallet = () => {
+    const{address, privateKey} = createRawWallet();
     return[address, privateKey];
 };
 
-const sign: (msg: string, privKey: string) => string = (msg, privKey) => sigToString(signRaw(msg, privKey));
+const sign = (msg: string, privKey: string) => sigToString(signRaw(msg, privKey));
 
-const hashParam: (value: solidityValue, type: solidityParam) => keccak256Hash = (value, type) => web3.utils.soliditySha3(web3.eth.abi.encodeParameter(type, value));
-const hashParams: (values: ReadonlyArray<solidityValue>, types: ReadonlyArray<solidityParam>) => ReadonlyArray<keccak256Hash> = (values, types) => values.map((value, index) => hashParam(value, types[index]));
+const hashParam  = (value: solidityValue, type: solidityParam) => web3.utils.soliditySha3(web3.eth.abi.encodeParameter(type, value));
+const hashParams = (values: ReadonlyArray<solidityValue>, types: ReadonlyArray<solidityParam>) => values.map((value, index) => hashParam(value, types[index]));
 
-const combineHashes: (hashes: ReadonlyArray<keccak256Hash>) => keccak256Hash = (hashes) => hashParam(hashes, 'bytes32[]');
-const hashMany: (values: ReadonlyArray<solidityValue>, types: ReadonlyArray<solidityParam>) => keccak256Hash = (values, types) => combineHashes(hashParams(values, types));
+const combineHashes = (hashes: ReadonlyArray<keccak256Hash>) => hashParam(hashes, 'bytes32[]');
+// ! const getParamType  = (y: keyof typeof invParamTypes) => ({[y]: invParamTypes[y] as solidityParam});
+const getParamType = (y: string): {[key: string]: solidityParam} => ({[y]: Object.keys(paramType).filter((k) => k !== 'default' && (paramType as any)[k].includes(y))[0] as solidityParam});
 
-// tslint:disable:typedef-whitespace
-// tslint:disable:space-within-parens
-const hashGame:              hashFunc<Game.deployData>        = ({owner, name, symbol, desc, image, timestamp})                                  => hashMany([owner, name, symbol, desc, image, timestamp],                    gameParamTypes);
-const hashGameTransfer:      hashFunc<Game.transferData>      = ({gameAddr, from, to, timestamp})                                                => hashMany([gameAddr, from, to, timestamp],                                  gameTransferParamTypes);
-const hashAsset:             hashFunc<Asset.deployData>       = ({gameAddr, name, rarity, cap, val, desc, image, timestamp})                     => hashMany([gameAddr, name, rarity, cap, val, desc, image, timestamp],       assetParamTypes);
-const hashAssetMint:         hashFunc<Asset.mintData>         = ({gameAddr, assetId, to, amount, timestamp})                                     => hashMany([gameAddr, assetId, to, amount, timestamp],                       mintParamTypes);
-const hashAssetTrade:        hashFunc<Asset.tradeData>        = ({gameAddr, assetId, from, to, amount, timestamp})                               => hashMany([gameAddr, assetId, from, to, amount, timestamp],                 tradeParamTypes);
-const hashLoanOfferPublic:   hashFunc<Loan.offerPublicData>   = ({gameAddr, lender, assetId, amount, length, timestamp})                         => hashMany([gameAddr, lender, assetId, amount, length, timestamp],           offerPublicLoanParamTypes);
-const hashLoanOfferPrivate:  hashFunc<Loan.offerPrivateData>  = ({gameAddr, lender, borrower, assetId, amount, length, timestamp})               => hashMany([gameAddr, lender, borrower, assetId, amount, length, timestamp], offerPrivateLoanParamTypes);
-const hashLoanHandlePrivate: hashFunc<Loan.handlePrivateData> = ({gameAddr, loanId, decision, timestamp})                                        => hashMany([gameAddr, loanId, decision, timestamp],                          handlePrivateLoanParamTypes);
-const hashLoanHandlePublic:  hashFunc<Loan.handlePublicData > = ({gameAddr, loanId, timestamp})                                                  => hashMany([gameAddr, loanId, timestamp],                                    handlePublicLoanParamTypes);
-const hashLoanFinish:        hashFunc<Loan.finishData>        = ({gameAddr, loanId, timestamp})                                                  => hashMany([gameAddr, loanId, timestamp],                                    finishLoanParamTypes);
-const hashBox:               hashFunc<Box.deployData>         = ({gameAddr, name, desc, image, tokens, timestamp})                               => hashMany([gameAddr, name, desc, image, tokens, timestamp],                 boxCreateParamTypes);
-const hashBoxUpdate:         hashFunc<Box.updateData>         = ({gameAddr, boxId, isValid, name, desc, image, tokens, timestamp})               => hashMany([gameAddr, boxId, isValid, name, desc, image, tokens, timestamp], boxUpdateParamTypes);
-const hashBoxBuy:            hashFunc<Box.buyData>            = ({gameAddr, boxId, timestamp})                                                   => hashMany([gameAddr, boxId, timestamp],                                     boxBuyParamTypes);
-const hashBoxRemove:         hashFunc<Box.removeData>         = ({gameAddr, boxId, timestamp})                                                   => hashMany([gameAddr, boxId, timestamp],                                     boxRemoveParamTypes);
-const hashTokenToCash:       hashFunc<Shop.tokenToCashData>   = ({gameAddr, assetId, amount, timestamp})                                         => hashMany([gameAddr, assetId, amount, timestamp],                           tokenToCashParamTypes);
-const hashCashToToken:       hashFunc<Shop.cashToTokenData>   = ({gameAddr, assetId, amount, timestamp})                                         => hashMany([gameAddr, assetId, amount, timestamp],                           cashToTokenParamTypes);
-const hashTokenToToken:      hashFunc<Shop.tokenToTokenData>  = ({gameAddr, fromId, fromAmount, toId, toAmount, timestamp})                      => hashMany([gameAddr, fromId, fromAmount, toId, toAmount, timestamp],        tokenToTokenParamTypes);
-const hashOfferPrivateTrade: hashFunc<Trade.offerPrivateData> = ({gameAddr, taker, offeredId, offeredAmount, wantedId, wantedAmount, timestamp}) => hashMany([gameAddr, taker, offeredId, offeredAmount, wantedId, wantedAmount, timestamp], offerPrivateTradeParamTypes);
-const hashOfferPublicTrade:  hashFunc<Trade.offerPublicData>  = ({gameAddr, offeredId, offeredAmount, wantedId, wantedAmount, timestamp})        => hashMany([gameAddr, offeredId, offeredAmount, wantedId, wantedAmount, timestamp], offerPublicTradeParamTypes);
-const hashTakePrivateTrade:  hashFunc<Trade.takePrivateData>  = ({gameAddr, index, timestamp})                                                   => hashMany([gameAddr, index, timestamp], takePrivateParamTypes);
-const hashTakePublicTrade:   hashFunc<Trade.takePublicData>   = ({gameAddr, index, timestamp})                                                   => hashMany([gameAddr, index, timestamp], takePublicParamTypes);
-const hashRemoveTrade:       hashFunc<Trade.removeTradeData>  = ({gameAddr, index, timestamp})                                                   => hashMany([gameAddr, index, timestamp], removeTradeParamTypes);
-// tslint:enable:typedef-whitespace
-// tslint:enable:space-within-parens
+const hashMany = <T>(key1: string, key2: string) => (values: T) => {
+    const paramTypeArray = (paramTypes as any)[key1][key2].map(getParamType) as Array<{[key: string]: solidityParam}>;
+    const valuesArr = paramTypeArray.map((param) => (values as any)[Object.keys(param)[0]]);
+    const types = paramTypeArray.map((param) => Object.values(param)[0]);
+    return combineHashes(hashParams(valuesArr, types));
+};
+
+const combine = <U>() => <T>(pathsMapped: Array<{key1: keyof U; key2: string; func: T}>) => pathsMapped.reduce((prev, {key1, key2, func}) => {
+    // const toAdd = ((key1 in prev) ? prev[key1] : {});
+    return Object.assign(
+        {}, prev,
+        {
+            [key1] : Object.assign(
+                {}, ((key1 in prev) ? prev[key1] : {}),
+                { [key2]: func }
+            )
+        }
+    );
+}, {} as U);
 
 const createHashAndSign = <T extends DataTypes>(f: hashFunc<T>): hashAndSignFunc<T> => (data, privKey) => sign(f(data), privKey);
-const createPostJSON1   = <T extends DataTypes>(f: hashAndSignFunc<T>): postJSONFunc<T> => (data, privKey) => (Object.assign({}, data, {signedMessage: f(data, privKey)}));
-const createPostJSON2   = <T extends DataTypes>(f: hashFunc<T>): postJSONFunc<T> => createPostJSON1(createHashAndSign(f));
+const createPostJSONF   = <T extends DataTypes>(f: hashFunc<T>): postJSONFunc<T> => (data, privKey) => (
+    Object.assign({}, data, {signedMessage: sign(f(data), privKey)})
+);
 
-const asset = {add: hashAsset,mint: hashAssetMint, trade: hashAssetTrade};
-const box = {add: hashBox, buy: hashBoxBuy, remove: hashBoxRemove, update: hashBoxUpdate};
-const game = {deploy: hashGame, transfer: hashGameTransfer};
-const loan = {finish: hashLoanFinish, handlePrivate: hashLoanHandlePrivate, handlePublic: hashLoanHandlePublic, offerPrivate: hashLoanOfferPrivate, offerPublic: hashLoanOfferPublic};
-const shop = {cashToToken: hashCashToToken, tokenToCash: hashTokenToCash, tokenToToken: hashTokenToToken};
-const trade = {offerPrivate: hashOfferPrivateTrade, offerPublic: hashOfferPublicTrade, takePrivate: hashTakePrivateTrade, takePublic: hashTakePublicTrade, remove: hashRemoveTrade};
+const paths = <T>(obj: {[key1: string]: {[key2: string]: T}}) => Object.entries(obj).map(([key1, val]) => Object.keys(val).map((key2) => ({key1, key2}))).reduce((prev, curr) => [...prev, ...curr], []);
+const pathsMap = <T, U>(obj: {[key1: string]: {[key2: string]: T}}, f: (a: string, b: string) => U) => paths(obj).map(({key1, key2}) => ({key1, key2, func: f(key1, key2)})) as Array<{key1: keyof U; key2: string; func: U}>;
 
-const hash = {asset, box, game, loan, shop, trade};
-const createPostJSON: CreatePostJSONObjType<typeof hash> = secondLevelMap(hash, createPostJSON2);
-
+// ! ------------------------------------------------------
 const v = 'v1';
-export const wrapper = axios.create({
-    baseURL: process.env.GAME_API || `http://api.sandbox.stardust.com/${v}`,
+// process.env.GAME_API || `http://api.sandbox.stardust.com/${v}`
+const wrapper = (baseURL = `http://api.sandbox.stardust.com/${v}`) => axios.create({
+    baseURL,
     timeout: 25000,
     headers: {'Content-Type': 'application/json'}
 });
 
-interface RoutesObj {
-    setters: { [key1: string]: { [key2: string]: { [key3: string]: string [] } }; };
-    getters: { [key1: string]: { [key2: string]: string [] }; };
-}
-
-const routesObj: RoutesObj = {
-    getters: {
-        asset: {
-            getAll: ['/assets'],
-            getAssetsOf: ['/assetsOf'],
-            getDetails: ['/assets']
-        },
-        box: {
-            getAll: ['/boxes'],
-            getDetails: ['/boxes']
-        },
-        game: {
-            getAll: ['/games'],
-            getBalanceOf: ['/games'],
-            getDetails: ['/games']
-        },
-        loan: {
-            getCreatedCount: ['/loans/created-loans-count'],
-            getDeletedCount: ['/loans/deleted-loans-count'],
-            getFreeBalanceOf: ['/loans/free-balance-of'],
-            getLoanedBalanceOf: ['/loans/loaned-balance-of'],
-            getSpecific: ['/loans']
-        },
-        shop: {
-            getOrderCount: ['/shop/order-count'],
-            getSpecific: ['/shop/orders'],
-            getUserOrder: ['/shop/game-orders'],
-            getUserOrderCountInGame: ['/shop/orders/count'],
-            getUserOrders: ['/shop/game-orders']
-        },
-        trade: {
-            getClosedCount: ['/trades/closed-count'],
-            getOpenCount: ['/trades/open-count'],
-            getTrade: ['/trades'],
-            getUserTradeInGame: ['/trades/game'],
-            getUserTradeCountDetails: ['/trades/user-count'],
-            getUserTradeIdsInGame: ['/trades/game/id']
-        }
-    },
-    setters: {
-        asset: {
-            add: {routes: ['/assets'], paramKeys: ['gameAddr']},
-            mint: {routes: ['/assets/mint'], paramKeys: ['gameAddr', 'assetId']},
-            trade: {routes: ['/assets/trade'], paramKeys: ['gameAddr', 'assetId']}
-        },
-        box: {
-            add: {routes: ['/boxes'], paramKeys: ['gameAddr']},
-            buy: {routes: ['/boxes/buy'], paramKeys: ['gameAddr', 'boxId']},
-            remove: {routes: ['/boxes/delete'], paramKeys: ['gameAddr', 'boxId']},
-            update: {routes: ['/boxes/update'], paramKeys: ['gameAddr', 'boxId']}
-        },
-        game: {
-            deploy: {routes: ['/games'], paramKeys: ['']},
-            transfer: {routes: ['/games/transfer'], paramKeys: ['gameAddr']}
-        },
-        loan: {
-            finish: {routes: ['/loans/finish'], paramKeys: ['gameAddr', 'loanId']},
-            handlePrivate: {routes: ['/loans/handle-private'], paramKeys: ['gameAddr', 'loanId']},
-            handlePublic: {routes: ['/loans/handle-public'], paramKeys: ['gameAddr', 'loanId']},
-            offerPrivate: {routes: ['/loans/offer-private'], paramKeys: ['gameAddr', 'assetId']},
-            offerPublic: {routes: ['/loans/offer-public'], paramKeys: ['gameAddr', 'assetId']}
-        },
-        shop: {
-            cashToToken: {routes: ['/shop/cash-to-token'], paramKeys: ['gameAddr']},
-            tokenToCash: {routes: ['/shop/token-to-cash'], paramKeys: ['gameAddr']},
-            tokenToToken: {routes: ['/shop/token-to-token'], paramKeys: ['gameAddr']}
-        },
-        trade: {
-            offerPrivate: {routes: ['/trades/offer-private'], paramKeys: ['gameAddr']},
-            offerPublic: {routes: ['/trades/offer-public'], paramKeys: ['gameAddr']},
-            remove: {routes: ['/trades/remove'], paramKeys: ['gameAddr', 'index']},
-            takePrivate: {routes: ['/trades/take-private'], paramKeys: ['gameAddr', 'index']},
-            takePublic: {routes: ['/trades/take-public'], paramKeys: ['gameAddr', 'index']}
-        }
-    }
-};
+export const hash = combine<HashObjType>()(pathsMap((routesObj as any).setters, hashMany));
+export const hashAndSign: HashAndSignObjType = secondLevelMap(hash, createHashAndSign);
+export const createPostJSON: CreatePostJSONObjType = secondLevelMap(hash, createPostJSONF);
 
 const pluck = <T, K extends keyof T>(obj: T, names: K[]) => fromPairs(Object.entries(obj).filter(([key]) => names.includes(key as K))) as Pick<T, K>;
-const paths = <T>(obj: {[key1: string]: {[key2: string]: T}}) => Object.entries(obj).map(([key1, val]) => Object.keys(val).map((key2) => ({key1, key2}))).reduce((prev, curr) => [...prev, ...curr], []);
-const pathsMap = <T, U>(obj: {[key1: string]: {[key2: string]: T}}, f: (a: string, b: string) => U) => paths(obj).map(({key1, key2}) => ({key1, key2, func: f(key1, key2)})) as Array<{key1: keyof U; key2: string; func: U}>;
 
-const createPost = <T>(key1: string, key2: string) => async(data: T, privKey: string) => {
-    const {routes, paramKeys} = routesObj.setters[key1][key2] as {routes: string[]; paramKeys: Array<keyof T>};
-    const postJSON = (createPostJSON as { [key1: string]: { [key2: string]: any }; })[key1][key2] as postJSONFunc<T>;
-    return wrapper.post(routes[0], postJSON(data, privKey), {params: pluck(data, paramKeys)});
+const createPost = (baseURL: string) => (key1: string, key2: string) => async<T>(data: T, privKey: string) => {
+    const {routes, paramKeys} = (routesObj as any).setters[key1][key2] as {routes: string[]; paramKeys: Array<keyof T>};
+    const postJSON = (createPostJSON as any)[key1][key2] as postJSONFunc<T>;
+    return wrapper(baseURL).post(routes[0], postJSON(data, privKey), {params: pluck(data, paramKeys)});
 };
 
-const createGet = <U>(key1: string, key2: string) => async(params: U) => wrapper.get(routesObj.getters[key1][key2][0], {params});
+const createGet = (baseURL: string) => (key1: string, key2: string) => async<U>(params: U) => wrapper(baseURL).get((routesObj as any).getters[key1][key2][0], {params});
 
-const combine = <U>() => <T>(pathsMapped: Array<{key1: keyof U; key2: string; func: T}>) => pathsMapped.reduce((prev, {key1, key2, func}) => {
-    return Object.assign({}, prev, {[key1] : {...(((key1 in prev) ? prev[key1] : {}) as object), [key2]: func}});
-}, {} as U);
-
-const getters = combine<Wrapper.GetterMap>()(pathsMap(routesObj.getters, createGet));
-const setters = combine<Wrapper.SetterMap>()(pathsMap(routesObj.setters, createPost));
-export const stardustAPI = {setters, getters};
+export const stardustAPI = (baseURL: string) => {
+    const getters = combine<Wrapper.GetterMap>()(pathsMap((routesObj as any).getters, createGet(baseURL)));
+    const setters = combine<Wrapper.SetterMap>()(pathsMap((routesObj as any).setters, createPost(baseURL)));
+    return {setters, getters};
+};
