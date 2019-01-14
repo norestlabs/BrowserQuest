@@ -32,7 +32,6 @@ export default class StorageSystem implements System {
             let equipment = params.player.getComponent(Equipment);
             let name = params.player.getComponent(Identifiable).name;
             let addr = params.player.getComponent(Identifiable).addr;
-            console.log(params.player.getComponent(Identifiable));
             if (!StorageManager.hasAlreadyPlayed()) {
                 StorageManager.initPlayer(name, addr);
                 StorageManager.savePlayer(Graphics.GetPlayerImage(equipment.armorName, equipment.weaponName),

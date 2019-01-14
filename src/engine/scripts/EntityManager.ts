@@ -218,7 +218,7 @@ module EntityManager {
     export let getEntityWithID = function (id : string | number) : Entity | null {
         if (id in entities_e) return entities_e[id];
         else {
-            Logger.log(`Entity with ID ${id} wasn't found.`, Logger.LogType.Warn);
+            // Logger.log(`Entity with ID ${id} wasn't found.`, Logger.LogType.Warn);
             return null;
         }
     }

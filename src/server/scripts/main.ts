@@ -295,6 +295,7 @@ function gameInit(config: any) {
       const { gameAddr } = gameData;
       StardustAPI.getters.game.getAll({ gameAddr }).then((res: any) => {
         process.env.gameData = JSON.stringify(gameData);
+        process.env.gameAddr = gameAddr;
         tokensInit(config, gameAddr);
       }).catch(err => {
         console.error(`Game at address ${gameAddr} not found.`);
@@ -313,6 +314,7 @@ function gameInit(config: any) {
       StardustAPI.setters.game.deploy(deployData, process.env.WALLET_PRIV).then((res: any) => {
         fs.writeFileSync(gameDataPath, JSON.stringify(res.data));
         process.env.gameData = JSON.stringify(res.data);
+        process.env.gameAddr = res.data.gameAddr;
         tokensInit(config, res.data.gameAddr);
       })
     }
@@ -342,10 +344,12 @@ function tokensInit(config: any, gameAddr: string) {
       StardustAPI.getters.token.getAll({ gameAddr }).then((res: any) => {
         process.env.gameTokens = JSON.stringify(res.data.tokens);
         main(config);
+        console.log(process.env.gameTokens);
       });
     } else {
       process.env.gameTokens = JSON.stringify(res.data.tokens);
       main(config);
+      console.log(process.env.gameTokens);
     }
   })
 }

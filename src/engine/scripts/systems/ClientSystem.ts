@@ -527,6 +527,7 @@ export default class ClientSystem implements System {
         let message : Messages.ClientHello = [
             GameTypes.Messages.HELLO,
             player.getComponent(Components.Identifiable).name,
+            player.getComponent(Components.Identifiable).addr,
             GameTypes.getKindFromString(equipment.armorName),
             GameTypes.getKindFromString(equipment.weaponName)
         ];

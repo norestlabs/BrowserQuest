@@ -3,7 +3,7 @@ import * as Utils from "@utils/utils";
 export let supportsWorkers = !!(<any>window).Worker;
 
 let inputName = $('#nameinput');
-let inputAddr = $('#nameinput');
+let inputAddr = $('#addrinput');
 inputName.val('');
 inputAddr.val('');
 export let GetInputName = function () : string {

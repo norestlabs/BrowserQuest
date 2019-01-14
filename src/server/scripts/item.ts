@@ -12,6 +12,7 @@ export default class Item extends Entity {
 
   isStatic: boolean;
   isFromChest: boolean;
+  isMint: boolean;
 
   respawn_callback: () => void;
 
@@ -22,6 +23,7 @@ export default class Item extends Entity {
     super(id, "item", kind, x, y);
     this.isStatic = false;
     this.isFromChest = false;
+    this.isMint = false;
   }
 
   handleDespawn(params: HandleDespawnParams): void {
