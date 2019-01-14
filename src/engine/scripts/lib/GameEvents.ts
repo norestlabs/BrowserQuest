@@ -214,7 +214,7 @@ export let GameEvents = {
         event : GameEvent.Game_Ready
     },
     Game_Connect : {
-        params : (game : Entity, username : string) => ({ ev : GameEvent.Game_Connect, game, username }),
+        params : (game : Entity, username : string, addr : string) => ({ ev : GameEvent.Game_Connect, game, username, addr }),
         event : GameEvent.Game_Connect
     },
     Achievement_Unlock : {

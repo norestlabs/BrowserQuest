@@ -253,7 +253,7 @@ module EntityManager {
         return e;
     }
 
-    export let createEntityFromLoadedPrefab = function (entityName : string, parent : Entity | null, kind? : GameTypes.Entities, id? : number, name? : string) : Entity {
+    export let createEntityFromLoadedPrefab = function (entityName : string, parent : Entity | null, kind? : GameTypes.Entities, id? : number, name? : string, addr? : string) : Entity {
         let e = new Entity(entityName, parent !== null ? parent : world);
         e.id = EntityIDGenerator();
 
@@ -283,6 +283,7 @@ module EntityManager {
         if (identifiable !== null && id) {
             identifiable.id = id;
             if (name !== undefined) identifiable.name = name;
+            if (addr !== undefined) identifiable.addr = addr;
         }
 
         entities_e[e.id] = e;

@@ -42,12 +42,14 @@ export default class GameSystem implements System {
      * 
      * @memberof Game
      */
-    private initPlayer (username? : string) : void {
+    private initPlayer (username? : string, addr? : string) : void {
         let player = EntityManager.getEntityWithTag("Player");
         // Setup id
         let identifiable = player.getComponent(Identifiable);
         if (!identifiable.name)
             identifiable.name = username;
+        if (!identifiable.addr)
+            identifiable.addr = addr;
         identifiable.id = 0;
 
         // Setup equipment
@@ -76,8 +78,9 @@ export default class GameSystem implements System {
             GameState.setCurrentStatus(GameState.Status.Started);
             this.clearEntities();
             let name = params.player.getComponent(Identifiable).name;
+            let addr = params.player.getComponent(Identifiable).addr;
             EntityManager.reloadEntity(params.player);
-            this.initPlayer(name);
+            this.initPlayer(name, addr);
         }
         else if (isEvent(params, GameEvents.Movement_PathingStop)) {
             if (params.origin.name === "Player") {
@@ -102,7 +105,7 @@ export default class GameSystem implements System {
             GameState.setCurrentStatus(GameState.Status.Started);
         }
         else if (isEvent(params, GameEvents.Game_Connect)) {
-            this.initPlayer(params.username);
+            this.initPlayer(params.username, params.addr);
         }
     }
 }

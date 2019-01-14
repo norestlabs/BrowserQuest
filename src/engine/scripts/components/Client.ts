@@ -11,12 +11,14 @@ export default class Client implements Component {
     host : string = "";
     port : number = 27000;
     username : string;
+    addr : string;
     playerId : number;
 
-    public setServerOptions(host : string, port : number, username : string) : void {
+    public setServerOptions(host : string, port : number, username : string, addr : string) : void {
         this.host = host;
         this.port = port;
         this.username = username;
+        this.addr = addr;
     }
 
     isListening : boolean = true;

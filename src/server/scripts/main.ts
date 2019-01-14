@@ -326,7 +326,6 @@ function tokensInit(config: any, gameAddr: string) {
   const tokens = gameTokens.Armors.concat(gameTokens.Weapons);
 
   StardustAPI.getters.token.getAll({ gameAddr }).then(async (res: any) => {
-    console.log(res.data);
     if (res.data.tokens.length === 0) {
       for (let i = 0; i < tokens.length; i++) {
         const token = tokens[i];

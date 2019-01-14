@@ -9,6 +9,7 @@ export default class Identifiable implements Component {
 
     id : number = -1;
     name : string = "";
+    addr : string = "";
     kind : GameTypes.Entities = GameTypes.Entities.None;
 
     public get defaultSpriteName () : string {

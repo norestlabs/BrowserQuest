@@ -33,13 +33,15 @@ export default class AttackSystem implements System {
   private updateEntity = (character: Entity, node: NodeType<AttackNode>): void => {
     if (node.Attack.enabled && node.Attack.hasTarget()) {
       let target = EntityManager.getEntityWithID(node.Attack.getTarget());
-      let targetTransform = target.getComponent(Transform);
-      node.Attack.cooldownCurrentTime += Time.deltaTime;
-      let isAdjacentNonDiagonal = node.Transform.isAdjacentNonDiagonal(targetTransform);
-      let canAttack = isAdjacentNonDiagonal && node.Attack.cooldownCurrentTime >= node.Attack.cooldownDuration;
-      if (canAttack) {
-        BroadcastEvent(GameEvents.Character_Attack.params(character, target));
-        node.Attack.cooldownCurrentTime = 0;
+      if (target) {
+        let targetTransform = target.getComponent(Transform);
+        node.Attack.cooldownCurrentTime += Time.deltaTime;
+        let isAdjacentNonDiagonal = node.Transform.isAdjacentNonDiagonal(targetTransform);
+        let canAttack = isAdjacentNonDiagonal && node.Attack.cooldownCurrentTime >= node.Attack.cooldownDuration;
+        if (canAttack) {
+          BroadcastEvent(GameEvents.Character_Attack.params(character, target));
+          node.Attack.cooldownCurrentTime = 0;
+        }
       }
     }
   }

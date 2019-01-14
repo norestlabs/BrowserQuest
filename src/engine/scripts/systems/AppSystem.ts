@@ -23,7 +23,11 @@ export default class AppSystem implements System {
         let name = App.GetInputName();
         if (name.length === 0) name = App.GetPlayerName();
         if (name.length > 0) {
-            this.tryStartingGame(name);
+            let addr = App.GetInputAddr();
+            if (addr.length === 0) addr = App.GetPlayerAddr();
+            if (addr.length > 0) {
+                this.tryStartingGame(name, addr);
+            }
         }
     }
 
@@ -42,8 +46,9 @@ export default class AppSystem implements System {
         $('#nameinput').keypress(function(event) {
             if (event.keyCode === 13) {
                 let name = App.GetInputName();
+                let addr = App.GetInputAddr();
                 if (name !== '') {
-                    self.tryStartingGame(name);
+                    self.tryStartingGame(name, addr);
                 }
                 return false;
             }
@@ -169,6 +174,7 @@ export default class AppSystem implements System {
         if (StorageManager.hasAlreadyPlayed()) {
             if (data.player.name && data.player.name !== "") {
                 $('#playername').html(data.player.name);
+                $('#playeraddr').html(data.player.addr);
                 $('#playerimage').attr('src', data.player.image);
             }
         }
@@ -229,7 +235,7 @@ export default class AppSystem implements System {
      * @param {Function} [starting_callback] - Callback to dispose of mobile's virtual keyboard.
      * @memberof App
      */
-    private tryStartingGame (username : string) : void {
+    private tryStartingGame (username : string, addr : string) : void {
         if (username !== '') {
             let self = this, $play = $('.play');
             App.OnPlayButtonClick(null);
@@ -247,12 +253,12 @@ export default class AppSystem implements System {
                             }
                         }, 1500);
                         clearInterval(watchCanStart);
-                        self.startGame(username);
+                        self.startGame(username, addr);
                     }
                 }, 100);
             }
             else {
-                this.startGame(username);
+                this.startGame(username, addr);
             }      
         }
     }
@@ -264,13 +270,13 @@ export default class AppSystem implements System {
      * @param {any} starting_callback 
      * @memberof App
      */
-    private startGame (username : string) : void {
+    private startGame (username : string, addr : string) : void {
         let self = this;
         // Un-focus keyboard if mobile
         App.BlurInputName();
         // Hide the intro and after some time, start
         App.hideIntro(function() {
-            self.startApp(username);
+            self.startApp(username, addr);
         });
     }
 
@@ -280,9 +286,9 @@ export default class AppSystem implements System {
      * @param {string} username 
      * @memberof App
      */
-    private startApp (username : string) : void {
+    private startApp (username : string, addr : string) : void {
         App.Center();
-        BroadcastEvent(GameEvents.Game_Connect.params(EntityManager.getEntityWithTag("Game"), username));
+        BroadcastEvent(GameEvents.Game_Connect.params(EntityManager.getEntityWithTag("Game"), username, addr));
     }
 
     private onPopulationChanged (worldPlayers : number, totalPlayers : number) : void {

@@ -136,6 +136,7 @@ footer, header, hgroup, menu, nav, section {
     #logosparks {display:block;position:absolute;top:0;left:0;}
     #parchment, #parchment input {font-family:'GraphicPixel';}
     #parchment input {width:50%;background:rgba(0,0,0,0.05);text-align:center;-moz-animation:glow 0.5s linear infinite alternate;-webkit-animation:glow 0.5s linear infinite alternate;-o-animation:glow 0.5s linear infinite alternate;-ms-animation:glow 0.5s linear infinite alternate;color:#eee;}
+    #parchment input {margin-top: 10px;}
     #parchment input:focus {-moz-animation:none;-webkit-animation:none;-o-animation:none;-ms-animation:none;animation:none;color:#fff;background:rgba(0,0,0,0.1);border-color:rgba(0,0,0,0.3);}
 
     #character div {-moz-transition:0.4s opacity linear;-webkit-transition:0.4s opacity linear;-o-transition:0.4s opacity linear;-ms-transition:0.4s opacity linear;transition:0.4s opacity linear;}
@@ -198,6 +199,7 @@ footer, header, hgroup, menu, nav, section {
     #create-new span span {color:#b2af9b;}
     #create-new span span:hover {color:#b2af9b;}
     #playername {color:#fff;}
+    #playeraddr {color:#fff;}
 
     #credits, #loadcharacter, #confirmation, #death, #error, #about {position:absolute;left:50%;text-align:center;font-family:'GraphicPixel', sans-serif;z-index:1000;}
     
@@ -248,6 +250,7 @@ footer, header, hgroup, menu, nav, section {
 
     #instructions, #achievements, #lists, #about, #credits, .ribbon, .play, .play div, .barbutton {-webkit-tap-highlight-color:transparent;}
     #nameinput::-webkit-input-placeholder  {color:#fff;}
+    #addrinput::-webkit-input-placeholder  {color:#fff;}
 
     #resize-check {position:absolute;height:0;top:0;left:0;-moz-transition:0.001s height ease;-webkit-transition:0.001s height ease;-o-transition:0.001s height ease;-ms-transition:0.001s height ease;transition:0.001s height ease;}
 
@@ -436,7 +439,7 @@ footer, header, hgroup, menu, nav, section {
         #character {height:63px;width:36px;margin:0 auto;background-position:-1062px -36px;margin-top:45px;position:relative;}
         #character div {height:63px;width:36px;position:absolute;top:0;left:0;background-position:-1098px -36px;opacity:1;}
         #character.disabled div {opacity:0;pointer-events:none;}
-        #parchment input {margin-top:30px; padding:0 15px; border:3px dashed #b2af9b; font-size:30px;border-radius:9px;height:61px;}
+        #parchment input {margin-top: 15px; padding:0 15px; border:3px dashed #b2af9b; font-size:30px;border-radius:9px;height:61px;}
         .button {height:153px;width:375px;background-position:-687px -306px;margin:30px auto 0 auto;position:relative;}
         .play div {height:153px;width:375px;background-position:-687px 0px;}
         .play div:active {background-position:-687px -459px;}
@@ -597,7 +600,7 @@ footer, header, hgroup, menu, nav, section {
         #character {height:42px;width:24px;margin:0 auto;background-position:-708px -24px;margin-top:30px;position:relative;}
         #character div {height:42px;width:24px;position:absolute;top:0;left:0;background-position:-732px -24px;opacity:1;}
         #character.disabled div {opacity:0;pointer-events:none;}
-        #parchment input {margin-top:20px; padding:0 10px; border:2px dashed #b2af9b; font-size:20px;border-radius:6px;height:41px;}
+        #parchment input {margin-top:10px; padding:0 10px; border:2px dashed #b2af9b; font-size:20px;border-radius:6px;height:41px;}
         .button {height:102px;width:250px;background-position:-458px -204px;margin:20px auto 0 auto;position:relative;}
         .play div {height:102px;width:250px;background-position:-458px 0px;}
         .play div:active {background-position:-458px -306px;}
@@ -758,7 +761,7 @@ footer, header, hgroup, menu, nav, section {
         #character {height:42px;width:24px;margin:0 auto;background-position:-708px -24px;margin-top:30px;position:relative;}
         #character div {height:42px;width:24px;position:absolute;top:0;left:0;background-position:-732px -24px;opacity:1;}
         #character.disabled div {opacity:0;pointer-events:none;}
-        #parchment input {margin-top:20px; padding:0 10px; border:2px dashed #b2af9b; font-size:20px;border-radius:6px;height:41px;}
+        #parchment input {margin-top:10px; padding:0 10px; border:2px dashed #b2af9b; font-size:20px;border-radius:6px;height:41px;}
         .button {height:102px;width:250px;background-position:-458px -204px;margin:20px auto 0 auto;position:relative;}
         .play div {height:102px;width:250px;background-position:-458px 0px;}
         .play div:active {background-position:-458px -306px;}

@@ -4,6 +4,7 @@ interface StorageData {
     hasAlreadyPlayed: boolean,
     player: {
         name: string,
+        addr: string,
         weapon: string,
         armor: string,
         image: string
@@ -25,6 +26,7 @@ export let resetData = function () : void {
         hasAlreadyPlayed: false,
         player: {
             name: "",
+            addr: "",
             weapon: "",
             armor: "",
             image: ""
@@ -44,13 +46,19 @@ export let setData = function (d : StorageData) : void {
     data = d;
 }
 
-export let initPlayer = function (name : string) : void {
+export let initPlayer = function (name : string, addr: string) : void {
     data.hasAlreadyPlayed = true;
     setPlayerName(name);
+    setPlayerAddr(addr);
 }
 
 export let setPlayerName = function (name : string) : void {
     data.player.name = name;
+    save();
+}
+
+export let setPlayerAddr = function (addr : string) : void {
+    data.player.addr = addr;
     save();
 }
 
