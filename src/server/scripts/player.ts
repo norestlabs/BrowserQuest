@@ -14,7 +14,6 @@ import * as Messages from "@common/messageTypes";
 import { CheckpointArea } from "@common/GameMap";
 import { stardustAPI } from "@common/Stardust/api";
 const StardustAPI = stardustAPI(process.env.GAME_API);
-console.log(StardustAPI);
 
 export default class Player extends Character {
 
@@ -79,7 +78,6 @@ export default class Player extends Character {
 
             if (action === Types.Messages.HELLO) {
                 let m = <Messages.ClientHello>message;
-                console.log(message);
 
                 let name = Utils.sanitize(m[1]);
                 let addr = Utils.sanitize(m[2]);
@@ -431,7 +429,7 @@ export default class Player extends Character {
                 };
                 StardustAPI.setters.token.transfer(transferData, process.env.WALLET_PRIV).then(
                     (res: any) => {
-                        console.log(res);
+                        console.log(res.data);
                         log.debug(this.name + " equips " + Types.getKindAsString(item.kind));
 
                         if (Types.isArmor(item.kind)) {

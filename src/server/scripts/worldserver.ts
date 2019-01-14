@@ -22,7 +22,6 @@ import { getRandomPositionInArea } from "@common/position";
 import { ServerMap } from "@common/GameMap";
 import { stardustAPI } from "@common/Stardust/api";
 const StardustAPI = stardustAPI(process.env.GAME_API);
-console.log(StardustAPI);
 
 const mintQueue: Array<any> = [];
 

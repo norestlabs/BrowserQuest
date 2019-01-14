@@ -344,12 +344,10 @@ function tokensInit(config: any, gameAddr: string) {
       StardustAPI.getters.token.getAll({ gameAddr }).then((res: any) => {
         process.env.gameTokens = JSON.stringify(res.data.tokens);
         main(config);
-        console.log(process.env.gameTokens);
       });
     } else {
       process.env.gameTokens = JSON.stringify(res.data.tokens);
       main(config);
-      console.log(process.env.gameTokens);
     }
   })
 }
