@@ -65,7 +65,7 @@ export default class AnimationRenderable implements Component {
      * @memberof AnimationRenderable
      */
     public GetSpritePosition (sprite : Sprite) : Coordinate {
-        if (this.currentAnimation != null) {
+        if (this.currentAnimation != null && sprite.animations[this.currentAnimationName]) {
             let spriteAnimationLength = sprite.animations[this.currentAnimationName].length;
             let givenAnimationIndex = this.frame.x;
             let index = givenAnimationIndex % spriteAnimationLength;
