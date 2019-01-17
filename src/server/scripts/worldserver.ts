@@ -20,8 +20,8 @@ import Types from "@common/gametypes";
 import * as Utils from "@common/utils";
 import { getRandomPositionInArea } from "@common/position";
 import { ServerMap } from "@common/GameMap";
-import { stardustAPI } from "@common/Stardust/api";
-const StardustAPI = stardustAPI(process.env.GAME_API);
+// import { stardustAPI } from "@common/Stardust/api";
+// const StardustAPI = stardustAPI(process.env.GAME_API);
 
 const mintQueue: Array<any> = [];
 
@@ -30,11 +30,11 @@ setInterval(() => {
   const top = mintQueue.shift();
   const { mintData, callback } = top;
   mintData.timestamp = Date.now();
-  // callback();
-  StardustAPI.setters.token.mint(mintData, process.env.WALLET_PRIV)
-    .then(callback)
-    .catch(err => console.log(err.message));
-}, 3000);
+  callback();
+  // StardustAPI.setters.token.mint(mintData, process.env.WALLET_PRIV)
+  //   .then(callback)
+  //   .catch(err => console.log(err.message));
+}, 1000);
 
 // ======= GAME SERVER ========
 

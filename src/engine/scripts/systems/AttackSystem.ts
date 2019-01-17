@@ -124,7 +124,7 @@ export default class AttackSystem implements System {
     let attackable = origin.getComponent(Attackable);
     attackable.forEachAttacker(function (attacker) {
       let entity = EntityManager.getEntityWithID(attacker); // Serious Error - TypeError : Entity is null
-      if (!entity) {
+      if (entity) {
         entity.getComponent(Attack).removeTarget();
         BroadcastEvent(GameEvents.Attack_RemoveTarget.params(entity, origin));
         let attackable = entity.getComponent(Attackable);
@@ -168,9 +168,11 @@ export default class AttackSystem implements System {
       let attackable = params.character.getComponent(Attackable);
       attackable.forEachAttacker(function (attacker) {
         let e = EntityManager.getEntityWithID(attacker);
-        e.getComponent(Attack).removeTarget();
-        BroadcastEvent(GameEvents.Attack_RemoveTarget.params(e, params.character));
-        e.getComponent(Attackable).removeAttacker(params.character.id);
+        if (e) {
+          e.getComponent(Attack).removeTarget();
+          BroadcastEvent(GameEvents.Attack_RemoveTarget.params(e, params.character));
+          e.getComponent(Attackable).removeAttacker(params.character.id);
+        }
       });
       attackable.removeAttackers();
     }
@@ -192,11 +194,13 @@ export default class AttackSystem implements System {
       let attack = params.origin.getComponent(Attack);
       if (attack != null && attack.enabled && attack.hasTarget()) {
         let target = EntityManager.getEntityWithID(attack.getTarget());
-        // The entity isn't attacking anymore
-        attack.removeTarget();
-        // And the target isn't being attacked anymore
-        target.getComponent(Attackable).removeAttacker(params.origin.id);
-        BroadcastEvent(GameEvents.Attack_RemoveTarget.params(params.origin, target));
+        if (target) {
+          // The entity isn't attacking anymore
+          attack.removeTarget();
+          // And the target isn't being attacked anymore
+          target.getComponent(Attackable).removeAttacker(params.origin.id);
+          BroadcastEvent(GameEvents.Attack_RemoveTarget.params(params.origin, target));
+        }
       }
     }
   }
