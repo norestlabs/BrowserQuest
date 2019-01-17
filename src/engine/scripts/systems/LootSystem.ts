@@ -22,7 +22,7 @@ export default class LootSystem implements System {
     private checkForLoot () : void {
         let player = EntityManager.getFirstEntityWithComponent(Loot);
         let loot = player.getComponent(Loot);
-        if (loot.enabled && loot.target && 
+        if (loot.enabled && loot.target && loot.target.getComponent(Transform) && player.getComponent(Transform) && 
             loot.target.getComponent(Transform).GridPosition.equals(player.getComponent(Transform).GridPosition)) {
                 try {
                     let item = loot.target;
