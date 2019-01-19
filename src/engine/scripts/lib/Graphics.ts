@@ -382,7 +382,7 @@ export let DrawSprite = function (spriteName : string, position : Position2D, al
     // Draw hurt sprite
     if (hurt) {
         let hurtSprite = GetHurtSprite(sprite);
-        if (hurtSprite != null)
+        if (hurtSprite != null && hurtSprite.isLoaded)
             context.drawImage(hurtSprite.image, x, y, w, h, offsetX, offsetY, dw, dh);
     }
     // Draw silhouette
@@ -479,8 +479,11 @@ let CreateHurtSprite = function (original : Sprite) : Sprite {
     let image = new Image(width, height);
     let name = original.name + "_white";
     image.id = original.name;
-    image.src = c.toDataURL();
     let newSprite = new Sprite(name, image, original.imageRect);
+    newSprite.image.src = c.toDataURL();
+    newSprite.image.onload = function () {
+        newSprite.isLoaded = true;
+    };
 
     return newSprite;
 }
