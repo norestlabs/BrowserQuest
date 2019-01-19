@@ -295,7 +295,9 @@ export default class InputSystem implements System {
                 // Check if there was a lastHovered entity
                 if (hoverMouse.lastHovered != null) {
                     // Remove the silhouette of that
-                    hoverMouse.lastHovered.getComponent(SilhouetteSpriteRenderable).enabled = false;
+                    if (hoverMouse.lastHovered.getComponent(SilhouetteSpriteRenderable)) {
+                        hoverMouse.lastHovered.getComponent(SilhouetteSpriteRenderable).enabled = false;
+                    }
                 }
                 // If the currently hovered entity doesn't already have a silhouette
                 if (!silhouetteRenderer.enabled && Graphics.supportsSilhouettes) {
@@ -307,7 +309,9 @@ export default class InputSystem implements System {
             // If isn't hovering an entity but lastHovered exists
             else if (hoverMouse.lastHovered != null) {
                 // Cancel lastHovered
-                hoverMouse.lastHovered.getComponent(SilhouetteSpriteRenderable).enabled = false;
+                if (hoverMouse.lastHovered.getComponent(SilhouetteSpriteRenderable)) {
+                    hoverMouse.lastHovered.getComponent(SilhouetteSpriteRenderable).enabled = false;
+                }
                 hoverMouse.lastHovered = null;
             }
         }
