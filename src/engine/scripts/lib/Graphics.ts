@@ -382,7 +382,7 @@ export let DrawSprite = function (spriteName : string, position : Position2D, al
     // Draw hurt sprite
     if (hurt) {
         let hurtSprite = GetHurtSprite(sprite);
-        if (hurtSprite != null)
+        if (hurtSprite != null && hurtSprite.isLoaded)
             context.drawImage(hurtSprite.image, x, y, w, h, offsetX, offsetY, dw, dh);
     }
     // Draw silhouette
