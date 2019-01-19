@@ -479,8 +479,11 @@ let CreateHurtSprite = function (original : Sprite) : Sprite {
     let image = new Image(width, height);
     let name = original.name + "_white";
     image.id = original.name;
-    image.src = c.toDataURL();
     let newSprite = new Sprite(name, image, original.imageRect);
+    newSprite.image.src = c.toDataURL();
+    newSprite.image.onload = function () {
+        newSprite.isLoaded = true;
+    };
 
     return newSprite;
 }
