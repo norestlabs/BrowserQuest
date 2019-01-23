@@ -139,7 +139,7 @@ function main(config: ConfigData): void {
       log = new Log(Log.INFO); break;
   };
 
-  log.info("Starting BrowserQuest game server...");
+  log.info("Starting BlockchainQuest game server...");
 
   // When a new player connects, find a world to put it in
   server.onConnect(function (connection: ws.socketIOConnection) {
@@ -305,10 +305,10 @@ function gameInit(config: any) {
     } else {
       const deployData = {
         owner: process.env.WALLET_ADDR,
-        name: 'BrowserQuest',
+        name: 'BlockchainQuest',
         symbol: 'BQG',
         desc: 'HTML5/JavaScript multiplayer game experiment.',
-        image: 'BrowserQuest',
+        image: 'BlockchainQuest',
         timestamp: Date.now()
       };
       StardustAPI.setters.game.deploy(deployData, process.env.WALLET_PRIV).then((res: any) => {
