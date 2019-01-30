@@ -21,6 +21,8 @@ import * as path from "path";
 import Prefab from "@common/prefab";
 import { stardustAPI/*, createWallet*/ } from "@common/Stardust/stardust";
 
+const StardustAPI = stardustAPI(process.env.GAME_API);
+
 export let log: Log;
 
 export interface ConfigData {
@@ -41,6 +43,10 @@ export interface ConfigData {
     [ component : string ] : { [ attribute : string ] : string };
 }*/
 
+function getEnv(key) {
+  return (process && process.env && process.env[key]) ? process.env[key] : null;
+}
+
 function main(config: ConfigData): void {
   // Create express server
   let app = express();
@@ -58,6 +64,39 @@ function main(config: ConfigData): void {
 
   // parse application/json
   app.use(bodyParser.json());
+
+  // Setup Game API
+  app.get("/generate_address", async function (req, res) {
+    const gameAddr = getEnv('gameAddr');
+    const privateKey = getEnv('WALLET_PRIV');
+    if (gameAddr && privateKey) {
+      try {
+        const { userAddr } = await StardustAPI.setters.user.generate({ gameAddr }, privateKey).then((res) => res.data);
+        res.json({ status: true, userAddr })
+      } catch (e) {
+        console.log(e);
+        res.json({ status: false, message: 'Something went wrong.' });
+      }
+    } else {
+      res.json({ status: false, message: 'Try again later.' });
+    }
+  });
+  app.get("/user_tokens/:userAddr", async function (req, res) {
+    const gameAddr = getEnv('gameAddr');
+    const privateKey = getEnv('WALLET_PRIV');
+    const { userAddr } = req.params;
+    if (gameAddr && privateKey) {
+      try {
+        const tokens: any = await StardustAPI.getters.token.getTokensOf({ gameAddr, userAddr });
+        res.json({ status: true, tokens: tokens.tokens })
+      } catch (e) {
+        console.log(e);
+        res.json({ status: false, message: 'Something went wrong.' });
+      }
+    } else {
+      res.json({ status: false, message: 'Try again later.' });
+    }
+  });
 
   // Setup routes for http requests (in this case, the game will be accessible through site/test)
   app.get("/game", function (req, res, next) {
@@ -283,8 +322,6 @@ getConfigFile(defaultConfigPath, function (defaultConfig: ConfigData) {
     }
   });
 });
-
-const StardustAPI = stardustAPI(process.env.GAME_API);
 
 function gameInit(config: any) {
   const gameDataPath = './configuration/game.data.json';
