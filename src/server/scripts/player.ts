@@ -422,29 +422,6 @@ export default class Player extends Character {
         (item.kind >= 20 && item.kind <= 26)
         || (item.kind >= 60 && item.kind <= 66)
       ) {
-        // const transferData = {
-        //   gameAddr: process.env.gameAddr,
-        //   tokenId: item.kind < 30 ? (item.kind - 20) : (item.kind - 60 + 7),
-        //   from: process.env.WALLET_ADDR,
-        //   to: this.addr,
-        //   amount: 1,
-        //   timestamp: Date.now()
-        // };
-        // StardustAPI.setters.token.transfer(transferData, process.env.WALLET_PRIV).then(
-        //   (res: any) => {
-        //     console.log(res.data);
-        //     log.debug(this.name + " equips " + Types.getKindAsString(item.kind));
-
-        //     if (Types.isArmor(item.kind)) {
-        //       this.equipArmor(item.kind);
-        //       this.updateHitPoints();
-        //       this.send([Types.Messages.HP, this.maxHitPoints]);
-        //     }
-        //     else if (Types.isWeapon(item.kind)) {
-        //       this.equipWeapon(item.kind);
-        //     }
-        //   }
-        // )
         const mintData = {
           gameAddr: process.env.gameAddr,
           tokenId: item.kind < 30 ? (item.kind - 20) : (item.kind - 60 + 7),
