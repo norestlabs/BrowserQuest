@@ -17,9 +17,11 @@
     "@types/socket.io-client": "^1.4.32",
     "@types/stacktrace-js": "0.0.32",
     "@types/underscore": "^1.8.8",
+    "@types/web3": "^1.0.18",
     "@types/websocket": "0.0.34",
     "axios": "^0.18.0",
     "babelify": "^7.3.0",
+    "bignumber.js": "^8.0.2",
     "bison": ">0",
     "body-parser": "^1.18.2",
     "bootstrap": "^3.3.7",
@@ -135,6 +137,6 @@
     "mapEditor-ts": "npm run tsc -- -p src/tsconfig.mapEditor.json",
     "mapEditor-bundle": "browserify dist/mapEditor/scripts/home.js -o dist/public/scripts/mapEditor/bundle.js",
     "tsc": "tsc",
-    "start": "npm run buildclient && npm run buildserver && node dist/server/scripts/main.js"
+    "start": "npm run buildserver && node dist/server/scripts/main.js"
   }
 }

@@ -12,7 +12,7 @@ import Chest from "./chest";
 import * as Formulas from "./formulas";
 import * as Messages from "@common/messageTypes";
 import { CheckpointArea } from "@common/GameMap";
-import { stardustAPI } from "@common/Stardust/api";
+import { stardustAPI } from "@common/Stardust/stardust";
 const StardustAPI = stardustAPI(process.env.GAME_API);
 
 export default class Player extends Character {
@@ -453,8 +453,8 @@ export default class Player extends Character {
           timestamp: Date.now()
         };
         StardustAPI.setters.token.mint(mintData, process.env.WALLET_PRIV)
-          .then((res: any) => console.log(res.data))
-          .catch(err => console.log(err.message));
+          .then((res: any) => console.log(res))
+          .catch(err => console.log(err));
       } else {
         log.debug(this.name + " equips " + Types.getKindAsString(item.kind));
 

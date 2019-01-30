@@ -448,7 +448,7 @@ footer, header, hgroup, menu, nav, section {
         .stroke, .achievement-name {text-shadow:3px 3px 0 #373737, 3px -3px 0 #373737, 0 3px 0 #373737, 3px 0 0 #373737, -3px 3px 0 #373737, -3px -3px 0 #373737, 0 -3px 0 #373737, 0 3px 0 #373737, -3px 0 0 #373737;}
 
         #loadcharacter h1, #confirmation h1, #error h1 {margin-top:30px;}
-        #playername {margin-top:15px;}
+        #playeraddr {margin-top:15px;}
         .loadcharacter .play, .confirmation .delete {margin:15px auto 15px auto;}
         #confirmation p, #error p {font-size:30px;margin-top:60px;line-height:40px;}
         #error p {width:70%;margin:60px auto 0;}
@@ -609,7 +609,7 @@ footer, header, hgroup, menu, nav, section {
         .stroke, .achievement-name {text-shadow:2px 2px 0 #373737, 2px -2px 0 #373737, 0 2px 0 #373737, 2px 0 0 #373737, -2px 2px 0 #373737, -2px -2px 0 #373737, 0 -2px 0 #373737, 0 2px 0 #373737, -2px 0 0 #373737;}
         
         #loadcharacter h1, #confirmation h1, #error h1 {margin-top:20px;}
-        #playername {margin-top:10px;}
+        #playeraddr {margin-top:10px;}
         .loadcharacter .play, .confirmation .delete {margin:10px auto 10px auto;}
         #confirmation p, #error p {font-size:20px;margin-top:40px;line-height:30px;}
         #error p {width:70%;margin:40px auto 0;}
@@ -770,7 +770,7 @@ footer, header, hgroup, menu, nav, section {
         .stroke, .achievement-name {text-shadow:2px 2px 0 #373737, 2px -2px 0 #373737, 0 2px 0 #373737, 2px 0 0 #373737, -2px 2px 0 #373737, -2px -2px 0 #373737, 0 -2px 0 #373737, 0 2px 0 #373737, -2px 0 0 #373737;}
         
         #loadcharacter h1, #confirmation h1, #error h1 {margin-top:20px;}
-        #playername {margin-top:10px;}
+        #playeraddr {margin-top:10px;}
         .loadcharacter .play, .confirmation .delete {margin:10px auto 10px auto;}
         #confirmation p, #error p {font-size:20px;margin-top:40px;line-height:30px;}
         #error p {width:70%;margin:40px auto 0;}
@@ -927,7 +927,7 @@ footer, header, hgroup, menu, nav, section {
         .stroke, .achievement-name {text-shadow:1px 1px 0 #373737, 1px -1px 0 #373737, 0 1px 0 #373737, 1px 0 0 #373737, -1px 1px 0 #373737, -1px -1px 0 #373737, 0 -1px 0 #373737, 0 1px 0 #373737, -1px 0 0 #373737;}
         
         #loadcharacter h1, #confirmation h1, #error h1 {margin-top:20px;}
-        #playername {margin-top:5px;}
+        #playeraddr {margin-top:5px;}
         .loadcharacter .play, .confirmation .delete {margin:5px auto 5px auto;}
         #confirmation p, #error p {font-size:10px;margin-top:20px;line-height:20px;}
         #error p {width:70%;margin:40px auto 0;}

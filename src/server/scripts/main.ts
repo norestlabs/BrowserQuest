@@ -19,7 +19,7 @@ import * as glob from "glob";
 import * as bodyParser from "body-parser";
 import * as path from "path";
 import Prefab from "@common/prefab";
-import { stardustAPI } from "@common/Stardust/api";
+import { stardustAPI/*, createWallet*/ } from "@common/Stardust/stardust";
 
 export let log: Log;
 
@@ -292,7 +292,7 @@ function gameInit(config: any) {
     if (exists) {
       let gameData: any = fs.readFileSync(gameDataPath);
       gameData = JSON.parse(gameData.toString());
-      const { gameAddr } = gameData;
+      const { gameAddr } = gameData.data;
       StardustAPI.getters.game.getAll({ gameAddr }).then((res: any) => {
         process.env.gameData = JSON.stringify(gameData);
         process.env.gameAddr = gameAddr;
@@ -309,26 +309,31 @@ function gameInit(config: any) {
         symbol: 'BQG',
         desc: 'HTML5/JavaScript multiplayer game experiment.',
         image: 'BrowserQuest',
+        rarityNames: ['Common', 'Rare', 'Super Rare', 'Limited Edition', 'Unique'],
+        rarityPercs: [80, 15, 4, 0.85, 0.15],
         timestamp: Date.now()
       };
       StardustAPI.setters.game.deploy(deployData, process.env.WALLET_PRIV).then((res: any) => {
-        fs.writeFileSync(gameDataPath, JSON.stringify(res.data));
-        process.env.gameData = JSON.stringify(res.data);
-        process.env.gameAddr = res.data.gameAddr;
-        tokensInit(config, res.data.gameAddr);
+        fs.writeFileSync(gameDataPath, JSON.stringify(res));
+        process.env.gameData = JSON.stringify(res);
+        process.env.gameAddr = res.gameAddr;
+        tokensInit(config, res.gameAddr);
+      }).catch((err: any) => {
+        console.error(`Something went wrong with your provided data.`, err);
+        process.exit(1);
       })
     }
   })
 }
 
-function tokensInit(config: any, gameAddr: string) {
+async function tokensInit(config: any, gameAddr: string) {
   const gameTokensPath = './configuration/game.tokens.json';
   let gameTokens: any = fs.readFileSync(gameTokensPath);
   gameTokens = JSON.parse(gameTokens.toString());
   const tokens = gameTokens.Armors.concat(gameTokens.Weapons);
 
   StardustAPI.getters.token.getAll({ gameAddr }).then(async (res: any) => {
-    if (res.data.tokens.length === 0) {
+    if (res.tokens.length === 0) {
       for (let i = 0; i < tokens.length; i++) {
         const token = tokens[i];
         const tokenData = Object.assign({
@@ -342,11 +347,11 @@ function tokensInit(config: any, gameAddr: string) {
         }
       }
       StardustAPI.getters.token.getAll({ gameAddr }).then((res: any) => {
-        process.env.gameTokens = JSON.stringify(res.data.tokens);
+        process.env.gameTokens = JSON.stringify(res.tokens);
         main(config);
       });
     } else {
-      process.env.gameTokens = JSON.stringify(res.data.tokens);
+      process.env.gameTokens = JSON.stringify(res.tokens);
       main(config);
     }
   })
