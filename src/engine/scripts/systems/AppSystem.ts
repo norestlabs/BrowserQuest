@@ -178,6 +178,23 @@ export default class AppSystem implements System {
         $('#playername').html(data.player.name);
         $('#playeraddr').html(data.player.addr);
         $('#playerimage').attr('src', data.player.image);
+        $.get(`/user_tokens/${data.player.addr}`, ({ data }) => {
+          const { armorName, weaponName } = data;
+          const checkSpritesTimer = setInterval(function () {
+            const image = Graphics.GetPlayerImage(armorName, weaponName);
+            if (image) {
+              StorageManager.savePlayer(
+                image,
+                armorName,
+                weaponName
+              );
+              $('#playerimage').attr('src', StorageManager.data.player.image);
+              $('#playerimage').css('opacity', 1.0);
+              clearInterval(checkSpritesTimer);
+            }
+          }, 1000);
+        });
+        $('#playerimage').css('opacity', 0.6);
       }
     }
 
@@ -195,7 +212,7 @@ export default class AppSystem implements System {
     $.get('/generate_address', this.setUserAddress);
   }
 
-  private setUserAddress({userAddr}): void {
+  private setUserAddress({ userAddr }): void {
     // $('#addrinput').val('0x2342D8CF7F9596aD8dAB6535e48746557674De95');
     $('#addrinput').val(userAddr);
     $('#addrinput-reset').removeClass('loading');

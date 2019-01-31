@@ -87,8 +87,15 @@ function main(config: ConfigData): void {
     const { userAddr } = req.params;
     if (gameAddr && privateKey) {
       try {
-        const tokens: any = await StardustAPI.getters.token.getTokensOf({ gameAddr, userAddr });
-        res.json({ status: true, tokens: tokens.tokens })
+        let userTokens: any = await StardustAPI.getters.token.getTokensOf({ gameAddr, userAddr });
+        userTokens = userTokens.tokens;
+        const gameTokens = JSON.parse(process.env.gameTokens);
+        const tokens = Object.keys(userTokens)
+          .map(tokenId => gameTokens.find(t => t.tokenId == tokenId));
+        let armorName = 'clotharmor';
+        let weaponName = 'sword1';
+        tokens.forEach(token => token.tokenId <= 6 ? (armorName = token.image) : (weaponName = token.image));
+        res.json({ status: true, data: { armorName, weaponName } })
       } catch (e) {
         console.log(e);
         res.json({ status: false, message: 'Something went wrong.' });
