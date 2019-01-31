@@ -418,31 +418,41 @@ export default class Player extends Character {
 
   equipItem(item: Item): void {
     if (item) {
-      if (
-        (item.kind >= 20 && item.kind <= 26)
-        || (item.kind >= 60 && item.kind <= 66)
-      ) {
+      const gameTokens = JSON.parse(process.env.gameTokens);
+      let kind = item.kind;
+      switch (kind) {
+        case 65:
+        case 66: kind -= 3; break;
+        case 62:
+        case 63:
+        case 64: kind += 2; break;
+        default: break;
+      }
+      const token = gameTokens.find(t => t.val == kind);
+      if (token) {
         const mintData = {
           gameAddr: process.env.gameAddr,
-          tokenId: item.kind < 30 ? (item.kind - 20) : (item.kind - 60 + 7),
+          tokenId: token.tokenId,
           to: this.addr,
           amount: 1,
           timestamp: Date.now()
         };
         StardustAPI.setters.token.mint(mintData, process.env.WALLET_PRIV)
-          .then((res: any) => console.log(res))
+          .then((res: any) => {
+            console.log(res);
+            this.send([Types.Messages.SCROLL_POPUP, JSON.stringify(token)]);
+          })
           .catch(err => console.log(err));
-      } else {
-        log.debug(this.name + " equips " + Types.getKindAsString(item.kind));
+      }
+      log.debug(this.name + " equips " + Types.getKindAsString(item.kind));
 
-        if (Types.isArmor(item.kind)) {
-          this.equipArmor(item.kind);
-          this.updateHitPoints();
-          this.send([Types.Messages.HP, this.maxHitPoints]);
-        }
-        else if (Types.isWeapon(item.kind)) {
-          this.equipWeapon(item.kind);
-        }
+      if (Types.isArmor(item.kind)) {
+        this.equipArmor(item.kind);
+        this.updateHitPoints();
+        this.send([Types.Messages.HP, this.maxHitPoints]);
+      }
+      else if (Types.isWeapon(item.kind)) {
+        this.equipWeapon(item.kind);
       }
     }
   }

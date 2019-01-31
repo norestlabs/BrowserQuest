@@ -230,6 +230,7 @@ footer {
 
 h1 {
   font-weight: normal;
+  font-size: 150%;
 }
 
 .preload {
@@ -6165,4 +6166,54 @@ footer div {
 
 #addrinput-reset.loading img {
   display: inline-block;
+}
+
+#achievements .scroll-popup-wrapper {
+  display: none;
+}
+
+#achievements.scroll-popup .scroll-popup-wrapper {
+  display: block;
+}
+
+.scroll-popup .origin {
+  display: none;
+}
+
+.scroll-popup-wrapper {
+  width: 80%;
+  margin: 0 auto;
+  position: relative;
+  height: 100%;
+  padding: 5% 0;
+  box-sizing: border-box;
+}
+
+.scroll-popup-wrapper .links {
+  position: absolute;
+  bottom: 15%;
+  left: 0;
+}
+
+.scroll-popup-wrapper .links a {
+  display: table;
+  margin-top: 5%;
+}
+
+.scroll-popup-wrapper img {
+  position: absolute;
+  right: 3%;
+  width: 30%;
+  top: 25%;
+}
+
+.scroll-popup-wrapper h1 {
+  text-align: center;
+  font-size: 250%;
+  margin-bottom: 5%;
+}
+
+.scroll-popup-wrapper h3 {
+  font-size: 200%;
+  font-weight: normal;
 }

@@ -244,24 +244,35 @@ Mozilla presents an HTML5 mini-MMORPG by Little Workshop http://www.littleworksh
         </ul>
         <p>- click anywhere to close -</p>
       </article>
-      <article id="achievements" class="page1 clickable">
+      <article id="achievements" class="page1 clickable scroll-popup">
         <div class="close"></div>
-        <div id="achievements-wrapper">
-          <div id="lists">
+        <div class="origin">
+          <div id="achievements-wrapper">
+            <div id="lists">
+            </div>
           </div>
-        </div>
-        <div id="achievements-count" class="stroke">
-          Completed
-          <div>
-            <span id="unlocked-achievements">0</span>
-            /
-            <span id="total-achievements"></span>
+          <div id="achievements-count" class="stroke">
+            Completed
+            <div>
+              <span id="unlocked-achievements">0</span>
+              /
+              <span id="total-achievements"></span>
+            </div>
           </div>
+          <nav class="clickable">
+            <div id="previous"></div>
+            <div id="next"></div>
+          </nav>
         </div>
-        <nav class="clickable">
-          <div id="previous"></div>
-          <div id="next"></div>
-        </nav>
+        <div class="scroll-popup-wrapper">
+          <h1>New Weapon Found!</h1>
+          <h3 id="item-name">Name : New Weapon</h3>
+          <div class="links">
+            <a id="link-marketpace" target="_blank">View on Marketplace</a>
+            <a id="link-blockchain" target="_blank">View on Blockchain</a>
+          </div>
+          <img id="player-preview" src="assets/img/common/spinner-transparent.gif" alt="">
+        </div>
       </article>
       <div id="canvas">
         <canvas id="background"></canvas>
