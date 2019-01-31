@@ -29,7 +29,8 @@ module GameTypes {
         BLINK = 24,
         OPEN = 25,
         CHECK = 26,
-        Count = 27
+        Count = 27,
+        SCROLL_POPUP = 10001,
     }
 
     export enum Entities {

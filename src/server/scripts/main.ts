@@ -19,7 +19,9 @@ import * as glob from "glob";
 import * as bodyParser from "body-parser";
 import * as path from "path";
 import Prefab from "@common/prefab";
-import { stardustAPI } from "@common/Stardust/api";
+import { stardustAPI/*, createWallet*/ } from "@common/Stardust/stardust";
+
+const StardustAPI = stardustAPI(process.env.GAME_API);
 
 export let log: Log;
 
@@ -41,6 +43,10 @@ export interface ConfigData {
     [ component : string ] : { [ attribute : string ] : string };
 }*/
 
+function getEnv(key) {
+  return (process && process.env && process.env[key]) ? process.env[key] : null;
+}
+
 function main(config: ConfigData): void {
   // Create express server
   let app = express();
@@ -58,6 +64,46 @@ function main(config: ConfigData): void {
 
   // parse application/json
   app.use(bodyParser.json());
+
+  // Setup Game API
+  app.get("/generate_address", async function (req, res) {
+    const gameAddr = getEnv('gameAddr');
+    const privateKey = getEnv('WALLET_PRIV');
+    if (gameAddr && privateKey) {
+      try {
+        const { userAddr } = await StardustAPI.setters.user.generate({ gameAddr }, privateKey).then((res) => res.data);
+        res.json({ status: true, userAddr })
+      } catch (e) {
+        console.log(e);
+        res.json({ status: false, message: 'Something went wrong.' });
+      }
+    } else {
+      res.json({ status: false, message: 'Try again later.' });
+    }
+  });
+  app.get("/user_tokens/:userAddr", async function (req, res) {
+    const gameAddr = getEnv('gameAddr');
+    const privateKey = getEnv('WALLET_PRIV');
+    const { userAddr } = req.params;
+    if (gameAddr && privateKey) {
+      try {
+        let userTokens: any = await StardustAPI.getters.token.getTokensOf({ gameAddr, userAddr });
+        userTokens = userTokens.tokens;
+        const gameTokens = JSON.parse(process.env.gameTokens);
+        const tokens = Object.keys(userTokens)
+          .map(tokenId => gameTokens.find(t => t.tokenId == tokenId));
+        let armorName = 'clotharmor';
+        let weaponName = 'sword1';
+        tokens.forEach(token => token.tokenId <= 6 ? (armorName = token.image) : (weaponName = token.image));
+        res.json({ status: true, data: { armorName, weaponName } })
+      } catch (e) {
+        console.log(e);
+        res.json({ status: false, message: 'Something went wrong.' });
+      }
+    } else {
+      res.json({ status: false, message: 'Try again later.' });
+    }
+  });
 
   // Setup routes for http requests (in this case, the game will be accessible through site/test)
   app.get("/game", function (req, res, next) {
@@ -284,15 +330,13 @@ getConfigFile(defaultConfigPath, function (defaultConfig: ConfigData) {
   });
 });
 
-const StardustAPI = stardustAPI(process.env.GAME_API);
-
 function gameInit(config: any) {
   const gameDataPath = './configuration/game.data.json';
   fs.exists(gameDataPath, (exists: boolean) => {
     if (exists) {
       let gameData: any = fs.readFileSync(gameDataPath);
       gameData = JSON.parse(gameData.toString());
-      const { gameAddr } = gameData;
+      const { gameAddr } = gameData.data;
       StardustAPI.getters.game.getAll({ gameAddr }).then((res: any) => {
         process.env.gameData = JSON.stringify(gameData);
         process.env.gameAddr = gameAddr;
@@ -309,26 +353,31 @@ function gameInit(config: any) {
         symbol: 'BQG',
         desc: 'HTML5/JavaScript multiplayer game experiment.',
         image: 'BrowserQuest',
+        rarityNames: ['Common', 'Rare', 'Super Rare', 'Limited Edition', 'Unique'],
+        rarityPercs: [80, 15, 4, 0.85, 0.15],
         timestamp: Date.now()
       };
       StardustAPI.setters.game.deploy(deployData, process.env.WALLET_PRIV).then((res: any) => {
-        fs.writeFileSync(gameDataPath, JSON.stringify(res.data));
-        process.env.gameData = JSON.stringify(res.data);
-        process.env.gameAddr = res.data.gameAddr;
-        tokensInit(config, res.data.gameAddr);
+        fs.writeFileSync(gameDataPath, JSON.stringify(res));
+        process.env.gameData = JSON.stringify(res);
+        process.env.gameAddr = res.gameAddr;
+        tokensInit(config, res.gameAddr);
+      }).catch((err: any) => {
+        console.error(`Something went wrong with your provided data.`, err);
+        process.exit(1);
       })
     }
   })
 }
 
-function tokensInit(config: any, gameAddr: string) {
+async function tokensInit(config: any, gameAddr: string) {
   const gameTokensPath = './configuration/game.tokens.json';
   let gameTokens: any = fs.readFileSync(gameTokensPath);
   gameTokens = JSON.parse(gameTokens.toString());
   const tokens = gameTokens.Armors.concat(gameTokens.Weapons);
 
   StardustAPI.getters.token.getAll({ gameAddr }).then(async (res: any) => {
-    if (res.data.tokens.length === 0) {
+    if (res.tokens.length === 0) {
       for (let i = 0; i < tokens.length; i++) {
         const token = tokens[i];
         const tokenData = Object.assign({
@@ -342,11 +391,11 @@ function tokensInit(config: any, gameAddr: string) {
         }
       }
       StardustAPI.getters.token.getAll({ gameAddr }).then((res: any) => {
-        process.env.gameTokens = JSON.stringify(res.data.tokens);
+        process.env.gameTokens = JSON.stringify(res.tokens);
         main(config);
       });
     } else {
-      process.env.gameTokens = JSON.stringify(res.data.tokens);
+      process.env.gameTokens = JSON.stringify(res.tokens);
       main(config);
     }
   })
