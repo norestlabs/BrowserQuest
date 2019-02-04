@@ -6217,3 +6217,11 @@ footer div {
   font-size: 200%;
   font-weight: normal;
 }
+
+h1#logo {
+  background: transparent;
+}
+
+#logo img {
+  width: 100%;
+}
