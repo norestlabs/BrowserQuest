@@ -988,7 +988,8 @@ export let SetView = function (c: Context, pos: Position2D) {
  * Used for saving the player image to show in intro.
  */
 export let GetPlayerImage = function (armorName: string, weaponName: string) {
-  if (!sprites[armorName] || !sprites[weaponName]) return null;
+  if (!sprites[armorName] || !sprites[weaponName] || !shadowSprites["small"]) return null;
+  if (!sprites[armorName].isLoaded || !sprites[weaponName].isLoaded || !shadowSprites["small"].isLoaded) return null;
   let canvas = document.createElement('canvas'),
     ctx = assert(canvas.getContext('2d'), `Couldn't get "2d" context to create player image.`),
     os = upscaledRendering ? 1 : scale,
