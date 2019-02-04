@@ -12,7 +12,7 @@ import Chest from "./chest";
 import * as Formulas from "./formulas";
 import * as Messages from "@common/messageTypes";
 import { CheckpointArea } from "@common/GameMap";
-import { stardustAPI } from "@common/Stardust/api";
+import { stardustAPI } from "@common/Stardust/stardust";
 const StardustAPI = stardustAPI(process.env.GAME_API);
 
 export default class Player extends Character {
@@ -418,54 +418,41 @@ export default class Player extends Character {
 
   equipItem(item: Item): void {
     if (item) {
-      if (
-        (item.kind >= 20 && item.kind <= 26)
-        || (item.kind >= 60 && item.kind <= 66)
-      ) {
-        // const transferData = {
-        //   gameAddr: process.env.gameAddr,
-        //   tokenId: item.kind < 30 ? (item.kind - 20) : (item.kind - 60 + 7),
-        //   from: process.env.WALLET_ADDR,
-        //   to: this.addr,
-        //   amount: 1,
-        //   timestamp: Date.now()
-        // };
-        // StardustAPI.setters.token.transfer(transferData, process.env.WALLET_PRIV).then(
-        //   (res: any) => {
-        //     console.log(res.data);
-        //     log.debug(this.name + " equips " + Types.getKindAsString(item.kind));
-
-        //     if (Types.isArmor(item.kind)) {
-        //       this.equipArmor(item.kind);
-        //       this.updateHitPoints();
-        //       this.send([Types.Messages.HP, this.maxHitPoints]);
-        //     }
-        //     else if (Types.isWeapon(item.kind)) {
-        //       this.equipWeapon(item.kind);
-        //     }
-        //   }
-        // )
+      const gameTokens = JSON.parse(process.env.gameTokens);
+      let kind = item.kind;
+      switch (kind) {
+        case 65:
+        case 66: kind -= 3; break;
+        case 62:
+        case 63:
+        case 64: kind += 2; break;
+        default: break;
+      }
+      const token = gameTokens.find(t => t.val == kind);
+      if (token) {
         const mintData = {
           gameAddr: process.env.gameAddr,
-          tokenId: item.kind < 30 ? (item.kind - 20) : (item.kind - 60 + 7),
+          tokenId: token.tokenId,
           to: this.addr,
           amount: 1,
           timestamp: Date.now()
         };
+        this.send([Types.Messages.SCROLL_POPUP, JSON.stringify(token)]);
         StardustAPI.setters.token.mint(mintData, process.env.WALLET_PRIV)
-          .then((res: any) => console.log(res.data))
-          .catch(err => console.log(err.message));
-      } else {
-        log.debug(this.name + " equips " + Types.getKindAsString(item.kind));
+          .then((res: any) => {
+            console.log(res);
+          })
+          .catch(err => console.log(err));
+      }
+      log.debug(this.name + " equips " + Types.getKindAsString(item.kind));
 
-        if (Types.isArmor(item.kind)) {
-          this.equipArmor(item.kind);
-          this.updateHitPoints();
-          this.send([Types.Messages.HP, this.maxHitPoints]);
-        }
-        else if (Types.isWeapon(item.kind)) {
-          this.equipWeapon(item.kind);
-        }
+      if (Types.isArmor(item.kind)) {
+        this.equipArmor(item.kind);
+        this.updateHitPoints();
+        this.send([Types.Messages.HP, this.maxHitPoints]);
+      }
+      else if (Types.isWeapon(item.kind)) {
+        this.equipWeapon(item.kind);
       }
     }
   }

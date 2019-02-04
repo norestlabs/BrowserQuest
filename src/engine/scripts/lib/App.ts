@@ -8,12 +8,12 @@ inputName.val('');
 inputAddr.val('');
 export let GetInputName = function () : string {
     let input = inputName.val();
-    if (input != null) return input.toString();
+    if (input != null) return input.toString().trim();
     else return '';
 }
 export let GetInputAddr = function () : string {
     let input = inputAddr.val();
-    if (input != null) return input.toString();
+    if (input != null) return input.toString().trim();
     else return '';
 }
 /**
@@ -25,12 +25,12 @@ export let BlurInputName = function () : void {
 
 let playerName = $('#playername');
 export let GetPlayerName = function () : string {
-    return playerName.html().toString();
+    return playerName.html().toString().trim();
 }
 
 let playerAddr = $('#playeraddr');
 export let GetPlayerAddr = function () : string {
-    return playerAddr.html().toString();
+    return playerAddr.html().toString().trim();
 }
 
 let createCharacterPlayButton = $('#createcharacter .play');
