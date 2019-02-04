@@ -37,10 +37,10 @@ export default class StorageSystem implements System {
         StorageManager.savePlayer(Graphics.GetPlayerImage(equipment.armorName, equipment.weaponName),
           equipment.armorName,
           equipment.weaponName);
-        App.showMessage("Welcome to BrowserQuest!");
+        App.showMessage("Welcome to BlockchainQuest!");
       }
       else {
-        App.showMessage("Welcome back to BrowserQuest!");
+        App.showMessage("Welcome back to BlockchainQuest!");
         StorageManager.setPlayerName(name);
         StorageManager.setPlayerAddr(addr);
       }

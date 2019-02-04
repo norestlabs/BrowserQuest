@@ -727,10 +727,10 @@ export default class ClientSystem implements System {
           self.dispatch(reply.host, reply.port, username, addr);
         }
         else if (reply.status === 'FULL') {
-          console.log("BrowserQuest is currently at maximum player population. Please retry later.");
+          console.log("BlockchainQuest is currently at maximum player population. Please retry later.");
         }
         else {
-          console.log("Unknown log while connecting to BrowserQuest.");
+          console.log("Unknown log while connecting to BlockchainQuest.");
         }
       });
     }
@@ -772,7 +772,7 @@ export default class ClientSystem implements System {
           BroadcastEvent(GameEvents.Client_Disconnect.params("You have been disconnected for being inactive for too long"));
         }
         else {
-          BroadcastEvent(GameEvents.Client_Disconnect.params("The connection to BrowserQuest has been lost"));
+          BroadcastEvent(GameEvents.Client_Disconnect.params("The connection to BlockchainQuest has been lost"));
         }
       });
     }
