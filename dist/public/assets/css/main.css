@@ -228,7 +228,7 @@ footer {
   }
 }
 
-h1 {
+#achievements h1 {
   font-weight: normal;
   font-size: 150%;
 }
@@ -692,6 +692,11 @@ body.upscaled.game {
 
 #playeraddr {
   color: #fff;
+  transition: all .3s;
+}
+
+.addrinput {
+  transition: all .3s;
 }
 
 #about,
@@ -915,12 +920,39 @@ footer div {
   -webkit-tap-highlight-color: transparent;
 }
 
+.user_wallet {
+  position: absolute;
+  left: 12%;
+  top: 0;
+  width: 40px;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+#createcharacter .user_wallet {
+  left: 3%;
+  top: 17px;
+}
+
+.user_wallet:hover {
+  margin-top: 1px;
+  opacity: .8;
+}
+
 #nameinput::-webkit-input-placeholder {
   color: #fff;
 }
 
 #addrinput::-webkit-input-placeholder {
   color: #fff;
+}
+
+#parchment input#addrinput {
+  height: auto;
+  width: 90%;
+  border: none;
+  background: transparent;
 }
 
 #resize-check {

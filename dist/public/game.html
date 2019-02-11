@@ -77,13 +77,14 @@ Mozilla presents an HTML5 mini-MMORPG by Little Workshop http://www.littleworksh
             A Massively Multiplayer Adventure
             <span class="right-ornament"></span>
           </h1>
+          <img class="user_wallet" src="assets/img/common/wallet.png">
           <div id="character" class="disabled">
             <div></div>
           </div>
           <form action="none" method="get" accept-charset="utf-8">
             <input type="text" id="nameinput" class="stroke" name="player-name" placeholder="Name your character"
               maxlength="15">
-            <div style="position: relative;">
+            <div style="position: relative;" class="addrinput">
               <input type="text" id="addrinput" class="stroke" name="player-address" placeholder="Your wallet address"
                 maxlength="60" disabled>
               <div id="addrinput-reset" class="loading">
@@ -111,6 +112,7 @@ Mozilla presents an HTML5 mini-MMORPG by Little Workshop http://www.littleworksh
             <div class="bottom"></div>
           </div>
           <img id="playerimage" src="assets/img/common/spinner-transparent.gif">
+          <img class="user_wallet" src="assets/img/common/wallet.png">
           <div id="playername" class="stroke">
           </div>
           <div id="playeraddr" class="stroke">
@@ -379,6 +381,18 @@ Mozilla presents an HTML5 mini-MMORPG by Little Workshop http://www.littleworksh
     } else if (localStorage && localStorage.data) {
       parchment.className = "loadcharacter";
     }
+
+    document.querySelectorAll('.user_wallet').forEach(elem => elem.addEventListener('click', function(){
+      if (document.getElementById('playeraddr').style.opacity == 0) {
+        document.getElementById('playeraddr').style.opacity = 1;
+        document.querySelector('.addrinput').style.opacity = 1;
+      } else {
+        document.getElementById('playeraddr').style.opacity = 0;
+        document.querySelector('.addrinput').style.opacity = 0;
+      }
+    }));
+    document.getElementById('playeraddr').style.opacity = 0;
+    document.querySelector('.addrinput').style.opacity = 0;
   </script>
 
   <script>

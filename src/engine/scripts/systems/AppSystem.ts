@@ -126,6 +126,9 @@ export default class AppSystem implements System {
     $('.delete').click(function () {
       BroadcastEvent(GameEvents.Player_Delete.params());
       App.animateParchment('confirmation', 'createcharacter', Graphics.isMobile, Graphics.isTablet);
+      $('#playeraddr').css('opacity', 0);
+      $('.addrinput').css('opacity', 0);
+      $('#addrinput-reset').click();
     });
 
     $('#cancel span').click(function () {
