@@ -282,6 +282,23 @@ body.upscaled.game {
   image-rendering: -webkit-optimize-contrast;
 }
 
+.ribbon .bottom {
+  position: relative;
+}
+
+.ribbon .bottom .overlay {
+  position: absolute;
+  left: 3px;
+  right: 3px;
+  top: 2px;
+  bottom: 12px;
+  background: #d83939;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f5acac;
+}
+
 #moztab {
   height: 49px;
   width: 118px;
@@ -918,26 +935,6 @@ footer div {
 .play div,
 .ribbon {
   -webkit-tap-highlight-color: transparent;
-}
-
-.user_wallet {
-  position: absolute;
-  left: 12%;
-  top: 0;
-  width: 40px;
-  background: white;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-#createcharacter .user_wallet {
-  left: 3%;
-  top: 17px;
-}
-
-.user_wallet:hover {
-  margin-top: 1px;
-  opacity: .8;
 }
 
 #nameinput::-webkit-input-placeholder {

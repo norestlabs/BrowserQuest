@@ -135,9 +135,9 @@ export default class AppSystem implements System {
       App.animateParchment('confirmation', 'loadcharacter', Graphics.isMobile, Graphics.isTablet);
     });
 
-    $('.ribbon').click(function () {
-      App.toggleAbout(GameState.currentStatus === GameState.Status.Started, Graphics.isMobile, Graphics.isTablet);
-    });
+    // $('.ribbon').click(function () {
+    //   App.toggleAbout(GameState.currentStatus === GameState.Status.Started, Graphics.isMobile, Graphics.isTablet);
+    // });
 
     $('#nameinput').bind("keyup", function () {
       App.toggleButton();
