@@ -104,6 +104,30 @@ function main(config: ConfigData): void {
       res.json({ status: false, message: 'Try again later.' });
     }
   });
+  app.get("/marketplace/:userAddr", async function (req, res) {
+    const baseURL = `${getEnv('MARKET_PLACE')}`;
+    const gameAddr = getEnv('gameAddr');
+    const privateKey = getEnv('WALLET_PRIV');
+    const { userAddr } = req.params;
+    if (gameAddr && privateKey) {
+      try {
+        let userTokens: any = await StardustAPI.getters.token.getTokensOf({ gameAddr, userAddr });
+        userTokens = userTokens.tokens;
+        const gameTokens = JSON.parse(process.env.gameTokens);
+        const tokens = Object.keys(userTokens)
+          .map(tokenId => gameTokens.find(t => t.tokenId == tokenId));
+        const query = [];
+        tokens.forEach(token => query.push(token.name));
+        const queryParams = query.reduce((a, c) => a += `&item=${c}`, `address=${gameAddr}`);
+        res.json({ status: true, data: { gameAddr, marketplace: `${baseURL}?${queryParams}`, blockchain: '' } })
+      } catch (e) {
+        console.log(e);
+        res.json({ status: false, message: 'Something went wrong.' });
+      }
+    } else {
+      res.json({ status: false, message: 'Try again later.' });
+    }
+  });
 
   // Setup routes for http requests (in this case, the game will be accessible through site/test)
   app.get("/game", function (req, res, next) {

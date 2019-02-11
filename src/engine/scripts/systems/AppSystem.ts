@@ -212,12 +212,12 @@ export default class AppSystem implements System {
   private getUserAddress(): void {
     if (!$('#addrinput-reset').hasClass('loading'))
       $('#addrinput-reset').addClass('loading');
-    // $.get('/user_tokens/0x97e902B8af0e488344bBDF9a255E7d96EcaF1582', this.setUserAddress);
+    // $.get('/user_tokens/0x057e31bFc9EabAdFAf175901895f8b1222f07B10', this.setUserAddress);
     $.get('/generate_address', this.setUserAddress);
   }
 
   private setUserAddress({ userAddr }): void {
-    // $('#addrinput').val('0x97e902B8af0e488344bBDF9a255E7d96EcaF1582');
+    // $('#addrinput').val('0x057e31bFc9EabAdFAf175901895f8b1222f07B10');
     $('#addrinput').val(userAddr);
     $('#addrinput-reset').removeClass('loading');
   }
