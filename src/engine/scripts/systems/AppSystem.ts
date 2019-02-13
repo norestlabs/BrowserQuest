@@ -129,6 +129,7 @@ export default class AppSystem implements System {
       $('#playeraddr').css('opacity', 0);
       $('.addrinput').css('opacity', 0);
       $('#addrinput-reset').click();
+      localStorage.tokens = '[]';
     });
 
     $('#cancel span').click(function () {
