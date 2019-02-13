@@ -536,7 +536,7 @@ export default class ClientSystem implements System {
       const tokens: any = StorageManager.getTokens();
       const query = [];
       tokens.forEach(token => query.push(token.name));
-      const queryParams = query.reduce((a, c) => a += `&item=${c}`, `item=${token.name}`);
+      const queryParams = query.reduce((a, c) => a += `&inventory[]=${c}`, `inventory[]=${token.name}`);
 
       $('#link-marketplace').attr('href', marketplace + queryParams);
       $('#link-blockchain').attr('href', `http://68.183.20.43:3000/tokensOf?gameAddr=${gameAddr}&userAddr=${identifiable.addr}`);
