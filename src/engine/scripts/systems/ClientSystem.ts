@@ -519,15 +519,19 @@ export default class ClientSystem implements System {
   private receivePopupScroll(data: any): void {
     const token = JSON.parse(data[1]);
     const player = EntityManager.getEntityWithTag("Player");
-    console.log(token, player);
     const equipment = player.getComponent(Components.Equipment);
     let armorName = token.val < 30 ? token.image : equipment.armorName;
     let weaponName = token.val > 30 ? token.image : equipment.weaponName;
     $('#achievements').addClass('scroll-popup');
     $('#item-name').html(`Name : ${token.name}`)
     $('#player-preview').attr('src', Graphics.GetPlayerImage(armorName, weaponName));
-    $('#link-marketpace').attr('href', 'http://68.183.20.43:3000/tokens?gameAddr=0xDa0E707F822737E09088b66f4fda3Eb3D12D51cd');
-    $('#link-blockchain').attr('href', 'http://68.183.20.43:3000/tokens?gameAddr=0xDa0E707F822737E09088b66f4fda3Eb3D12D51cd');
+    const identifiable = player.getComponent(Components.Identifiable);
+    $.get(`/marketplace/${identifiable.addr}`, function (res) {
+      const { marketplace, blockchain, gameAddr } = res.data;
+      console.log(marketplace, blockchain);
+      $('#link-marketplace').attr('href', marketplace);
+      $('#link-blockchain').attr('href', `http://68.183.20.43:3000/tokensOf?gameAddr=${gameAddr}&userAddr=${identifiable.addr}`);
+    });
     App.toggleAchievements();
   }
 
