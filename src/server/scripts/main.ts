@@ -95,7 +95,7 @@ function main(config: ConfigData): void {
         let armorName = 'clotharmor';
         let weaponName = 'sword1';
         tokens.forEach(token => token.tokenId <= 6 ? (armorName = token.image) : (weaponName = token.image));
-        res.json({ status: true, data: { armorName, weaponName } })
+        res.json({ status: true, data: { armorName, weaponName, tokens } })
       } catch (e) {
         console.log(e);
         res.json({ status: false, message: 'Something went wrong.' });
@@ -108,18 +108,19 @@ function main(config: ConfigData): void {
     const baseURL = `${getEnv('MARKET_PLACE')}`;
     const gameAddr = getEnv('gameAddr');
     const privateKey = getEnv('WALLET_PRIV');
-    const { userAddr } = req.params;
     if (gameAddr && privateKey) {
       try {
-        let userTokens: any = await StardustAPI.getters.token.getTokensOf({ gameAddr, userAddr });
-        userTokens = userTokens.tokens;
-        const gameTokens = JSON.parse(process.env.gameTokens);
-        const tokens = Object.keys(userTokens)
-          .map(tokenId => gameTokens.find(t => t.tokenId == tokenId));
-        const query = [];
-        tokens.forEach(token => query.push(token.name));
-        const queryParams = query.reduce((a, c) => a += `&item=${c}`, `address=${gameAddr}`);
-        res.json({ status: true, data: { gameAddr, marketplace: `${baseURL}?${queryParams}`, blockchain: '' } })
+        // const { userAddr } = req.params;
+        // let userTokens: any = await StardustAPI.getters.token.getTokensOf({ gameAddr, userAddr });
+        // userTokens = userTokens.tokens;
+        // const gameTokens = JSON.parse(process.env.gameTokens);
+        // const tokens = Object.keys(userTokens)
+        //   .map(tokenId => gameTokens.find(t => t.tokenId == tokenId));
+        // const query = [];
+        // tokens.forEach(token => query.push(token.name));
+        // const queryParams = query.reduce((a, c) => a += `&item=${c}`, `address=${gameAddr}`);
+        // res.json({ status: true, data: { gameAddr, marketplace: `${baseURL}?${queryParams}`, blockchain: '' } })
+        res.json({ status: true, data: { gameAddr, marketplace: `${baseURL}?address=${gameAddr}&`, blockchain: '' } })
       } catch (e) {
         console.log(e);
         res.json({ status: false, message: 'Something went wrong.' });

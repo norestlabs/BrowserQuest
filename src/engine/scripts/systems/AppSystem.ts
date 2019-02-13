@@ -183,7 +183,8 @@ export default class AppSystem implements System {
         $('#playeraddr').html(data.player.addr);
         $('#playerimage').attr('src', data.player.image);
         $.get(`/user_tokens/${data.player.addr}`, ({ data }) => {
-          const { armorName, weaponName } = data;
+          const { armorName, weaponName, tokens } = data;
+          StorageManager.saveTokens(tokens);
           const checkSpritesTimer = setInterval(function () {
             const image = Graphics.GetPlayerImage(armorName, weaponName);
             if (image) {

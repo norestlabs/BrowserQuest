@@ -83,6 +83,19 @@ let save = function (): void {
   }
 }
 
+export let saveTokens = function (tokens: Array<Object>): void {
+  if (hasLocalStorage()) {
+    localStorage.tokens = JSON.stringify(tokens);
+  }
+}
+
+export let getTokens = function (): Array<Object> {
+  if (hasLocalStorage()) {
+    return JSON.parse(localStorage.tokens);
+  }
+  return [];
+}
+
 export let incrementRevives = function () {
   if (data.achievements.totalRevives < 5) {
     data.achievements.totalRevives++;
