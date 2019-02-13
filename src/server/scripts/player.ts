@@ -437,10 +437,11 @@ export default class Player extends Character {
           amount: 1,
           timestamp: Date.now()
         };
+        this.send([Types.Messages.SCROLL_POPUP, JSON.stringify(token)]);
         StardustAPI.setters.token.mint(mintData, process.env.WALLET_PRIV)
           .then((res: any) => {
             console.log(res);
-            this.send([Types.Messages.SCROLL_POPUP, JSON.stringify(token)]);
+            this.send([Types.Messages.TOKEN_MINTED, JSON.stringify(token)]);
           })
           .catch(err => console.log(err));
       }

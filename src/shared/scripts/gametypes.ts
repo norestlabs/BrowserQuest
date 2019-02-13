@@ -31,6 +31,7 @@ module GameTypes {
         CHECK = 26,
         Count = 27,
         SCROLL_POPUP = 10001,
+        TOKEN_MINTED = 10002,
     }
 
     export enum Entities {

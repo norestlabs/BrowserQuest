@@ -14,6 +14,7 @@ import * as App from "@lib/App";
 import * as Logger from "@lib/Logger";
 import * as Messages from "@common/messageTypes";
 import { GameEvents, isEvent } from "@lib/GameEvents";
+import * as StorageManager from "@lib/StorageManager";
 
 export default class ClientSystem implements System {
 
@@ -46,6 +47,7 @@ export default class ClientSystem implements System {
     client.handlers[GameTypes.Messages.HP] = this.receiveHitPoints;
     client.handlers[GameTypes.Messages.BLINK] = this.receiveBlink;
     client.handlers[GameTypes.Messages.SCROLL_POPUP] = this.receivePopupScroll;
+    client.handlers[GameTypes.Messages.TOKEN_MINTED] = this.receiveTokenMinted;
   }
 
   private getEntityWithIdentifiable(id: number): Entity | null {
@@ -529,10 +531,24 @@ export default class ClientSystem implements System {
     $.get(`/marketplace/${identifiable.addr}`, function (res) {
       const { marketplace, blockchain, gameAddr } = res.data;
       console.log(marketplace, blockchain);
-      $('#link-marketplace').attr('href', marketplace);
+
+      /* Mock Marketplace */
+      const tokens: any = StorageManager.getTokens();
+      const query = [];
+      tokens.forEach(token => query.push(token.name));
+      const queryParams = query.reduce((a, c) => a += `&item=${c}`, `item=${token.name}`);
+
+      $('#link-marketplace').attr('href', marketplace + queryParams);
       $('#link-blockchain').attr('href', `http://68.183.20.43:3000/tokensOf?gameAddr=${gameAddr}&userAddr=${identifiable.addr}`);
     });
     App.toggleAchievements();
+  }
+
+  private receiveTokenMinted(data: any): void {
+    const token = JSON.parse(data[1]);
+    const tokens = StorageManager.getTokens();
+    tokens.push(token);
+    StorageManager.saveTokens(tokens);
   }
 
   private sendMessage(json: any[]): void {
