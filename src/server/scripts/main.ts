@@ -120,7 +120,7 @@ function main(config: ConfigData): void {
         // tokens.forEach(token => query.push(token.name));
         // const queryParams = query.reduce((a, c) => a += `&item=${c}`, `address=${gameAddr}`);
         // res.json({ status: true, data: { gameAddr, marketplace: `${baseURL}?${queryParams}`, blockchain: '' } })
-        res.json({ status: true, data: { gameAddr, marketplace: `${baseURL}?address=${gameAddr}&`, blockchain: '' } })
+        res.json({ status: true, data: { gameAddr, marketplace: `${baseURL}?`, blockchain: '' } })
       } catch (e) {
         console.log(e);
         res.json({ status: false, message: 'Something went wrong.' });
