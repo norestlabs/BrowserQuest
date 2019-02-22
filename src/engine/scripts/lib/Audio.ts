@@ -62,7 +62,7 @@ export let getSound = function (name : string) : HTMLAudioElement | null {
 
 export let playSound = function (name : string) : void {
     let sound = getSound(name);
-    if (sound) {
+    if (sound && enabled) {
         sound.play();
     }
 }
