@@ -208,7 +208,7 @@ export default class World {
     this.onRegenTick(function () {
       self.forEachCharacter(function (character: Character) {
         if (!character.hasFullHealth()) {
-          character.regenHealthBy(Math.floor(character.maxHitPoints / 25));
+          character.regenHealthBy(Math.floor(character.maxHitPoints / 15));
 
           if (character.type === 'player') {
             self.pushToPlayer(<Player>character, character.getRegenMessage());
