@@ -16,17 +16,29 @@ After getting the code and Node/npm, install the packages, by going to the main 
 npm install
 ```
 
+Copy configurations and `.env.example` by following commands:
+
+```
+$> cp .env.example .env
+$> cd configuration
+$> cp client.local.json.example client.local.json
+$> cp server.json.example server.json
+```
+
+and update `.env` with your Wallet address and private key, as well as host address on `server.json`
+
+
 ### Usage
 
-First setup and run the server:
+First build client:
+```
+npm run buildclient
+```
+
+Then build server and run:
 ```
 npm run buildserver
 node dist\server\scripts\main.js
-```
-
-Then the client:
-```
-npm run buildclient
 ```
 
 The port to access it can be set in the **configuration** folder.
